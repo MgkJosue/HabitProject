@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from routers.tareas import router as tareas_router
 from routers.usuarios import router as usuarios_router
+from routers.habitos import router as habitos_router
+from routers.progresos import router as progresos_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -18,3 +20,5 @@ app.add_middleware(
 
 app.include_router(usuarios_router)
 app.include_router(tareas_router)
+app.include_router(habitos_router)
+app.include_router(progresos_router)

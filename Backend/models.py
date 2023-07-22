@@ -30,7 +30,7 @@ class Tarea(Base):
     estado_tarea = Column(Enum('completada', 'pendiente', 'vencida'))
 
     usuario = relationship("Usuario", back_populates="tareas")
-    progresos = relationship("Progreso", back_populates="tarea")
+    progreso = relationship("Progreso", back_populates="tarea")
 
 
 class Habito(Base):
@@ -44,11 +44,11 @@ class Habito(Base):
     estado_habito = Column(Enum('en progreso', 'cumplido'))
 
     usuario = relationship("Usuario", back_populates="habitos")
-    progresos = relationship("Progreso", back_populates="habito")
+    progreso = relationship("Progreso", back_populates="habito")
 
 
 class Progreso(Base):
-    __tablename__ = "Progresos"
+    __tablename__ = "Progreso"
 
     id_progreso = Column(Integer, primary_key=True, index=True)
     id_tarea = Column(Integer, ForeignKey("Tareas.id_tarea"))
@@ -56,5 +56,5 @@ class Progreso(Base):
     fecha = Column(DateTime)
     estado = Column(Enum('completado', 'en progreso'))
 
-    tarea = relationship("Tarea", back_populates="progresos")
-    habito = relationship("Habito", back_populates="progresos")
+    tarea = relationship("Tarea", back_populates="progreso")
+    habito = relationship("Habito", back_populates="progreso")

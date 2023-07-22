@@ -77,6 +77,15 @@ class Habito(HabitoBase):
         orm_mode = True
 
 
+class HabitoUpdate(BaseModel):
+    id_usuario: int
+    titulo_habito: str
+    descripcion_habito: str
+
+    class Config:
+        orm_mode = True
+
+
 class ProgresoBase(BaseModel):
     id_tarea: Optional[int] = None
     id_habito: Optional[int] = None
