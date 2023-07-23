@@ -170,7 +170,7 @@ def delete_habito(db: Session, id_habito: int):
 
 
 #Estos son los crud para progresos
-# CRUD functions for Progresos
+# CRUD functions for Progresossds
 
 def get_progreso(db: Session, skip: int = 0, limit: int = 100):
     try:
