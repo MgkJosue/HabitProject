@@ -46,7 +46,8 @@ class TareaBase(BaseModel):
 
 
 class TareaCreate(TareaBase):
-    pass
+    fecha_creacion_tarea: datetime = datetime.now()
+    estado_tarea: EstadoTarea = EstadoTarea.pendiente
 
 
 class Tarea(TareaBase):

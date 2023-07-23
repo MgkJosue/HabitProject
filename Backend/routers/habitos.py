@@ -31,7 +31,7 @@ def create_habitos(habito: schemas.HabitoCreate, db: Session = Depends(get_db)):
     except SQLAlchemyError as e:
         # Aquí puedes agregar el código para manejar los errores de base de datos
         # Tal vez quieras hacer logging de e.orig o e.statement para más detalles
-        raise HTTPException(status_code=400, detail=f"Error en la base de datos al crear el habito") from e
+        raise HTTPException(status_code=400, detail="Error en la base de datos al crear el habito") from e
     except ValidationError as e:
         # Aquí puedes manejar los errores de validación de datos
         raise HTTPException(status_code=400, detail="Invalid data") from e
