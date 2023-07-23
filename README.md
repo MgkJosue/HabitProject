@@ -22,7 +22,7 @@ NOTA: En el caso de que la base de datos tenga una contraseña y un usuario dife
 
 Despues de realizar todo este proceso se debe ir a la raiz del archivo "main.py" para poder ejecutar el servicio con FastApi con este comando:
 
-uvicorn main:app --reaload 
+uvicorn main:app --reload 
 
 Se puede probar el servicion con la siguiente coleccion realizada en Postman 
 
