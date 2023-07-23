@@ -28,3 +28,6 @@ Se puede probar el servicion con la siguiente coleccion realizada en Postman
 
 https://grey-eclipse-316933.postman.co/workspace/New-Team-Workspace~7d5fff89-db4d-42fc-ac08-241173a8ff64/collection/21195311-33c20b8d-1cac-42d2-855c-fd4ba7293447?action=share&creator=21195311
 
+
+LA DOCUMENTACION COMPLETA DE LOS ENDPOINTS SE ENCUENTRA EN ESTE LINK (TENER EN CUENTA QUE SE NECESITA TENER EL SERVICIO EN MARCHA): http://localhost:8000/docs
+
