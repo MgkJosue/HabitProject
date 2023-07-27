@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
+import backgroundImage1 from '../img/logui1.jpg';
+import backgroundImage2 from '../img/profile.jpg';
+import backgroundImage3 from '../img/signup.jpg';
+
+const images = [backgroundImage1, backgroundImage2, backgroundImage3];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,13 +68,45 @@ const useStyles = makeStyles((theme) => ({
       transform: 'translateY(0)',
     },
   },
+  image: {
+    width: '100%',
+    height: '100%',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    animation: '$pulse 3s infinite', // Using the pulse animation
+  },
+  '@keyframes pulse': {
+    '0%': {
+      transform: 'scale(1)',
+    },
+    '50%': {
+      transform: 'scale(1.1)',
+    },
+    '100%': {
+      transform: 'scale(1)',
+    },
+  },
 }));
 
 export default function HabitEditPage() {
   const classes = useStyles();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    // Función para cambiar la imagen cada 5 segundos
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // 5000 milisegundos = 5 segundos
+
+    // Limpieza del intervalo cuando el componente se desmonta
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className={classes.root}>
+    <div
+      className={classes.root}
+      style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
+    >
       <div className={classes.overlay}></div>
       <Container component="main" maxWidth="xs">
         <form className={classes.form} noValidate>

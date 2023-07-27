@@ -10,7 +10,7 @@ import backgroundImage from '../img/sunrise-g96940d752_1280.jpg'; // Ruta de la 
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(10),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -37,6 +37,12 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     right: 0,
     margin: theme.spacing(2),
+  },
+  title: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(2),
+    color: '#FFFFFF', // Cambiar el color a blanco
   },
 }));
 
@@ -93,7 +99,7 @@ function TaskListPage() {
   return (
     <Container component="main" maxWidth="md">
       <div className={classes.root}>
-        <Typography component="h1" variant="h7">
+      <Typography component="h1" variant="h7" className={classes.title}>
           Mis Tareas
         </Typography>
         <Button

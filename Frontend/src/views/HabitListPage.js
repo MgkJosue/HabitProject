@@ -5,19 +5,34 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import backgroundImage from '../img/sunrise-g96940d752_1280.jpg'; // Ruta de la imagen local
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    backgroundImage: `url(${backgroundImage})`, // Ruta de la imagen de fondo
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minHeight: '70vh', // Asegura que el fondo cubra toda la pantalla
+    backgroundColor: '#000000', // Asegura que el fondo cubra toda la pantalla
   },
   habitList: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     margin: '10px 0',
+    backgroundColor: '#d1d0e0', // Color celeste pastel (ajusta según tus preferencias)
+    borderRadius: '10px', // Agregar el borde redondeado al contenedor
+  },
+  title: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(2),
+    color: '#FFFFFF', // Cambiar el color a blanco
   },
 }));
 
@@ -42,7 +57,7 @@ function HabitListPage() {
   return (
     <Container component="main" maxWidth="md">
       <div className={classes.root}>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" className={classes.title}>
           Mis Hábitos
         </Typography>
         <Button
