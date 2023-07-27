@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-
+import Alert from '@material-ui/lab/Alert'; 
 
 import { 
   Container, 
@@ -79,38 +79,48 @@ export default function SignUpPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();  
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+  
+    // Validar que los campos no estén vacíos
+    if (username === '' || password === '') {
+      setError('Todos los campos son obligatorios');
+      return;
+    }
+  
     const response = await fetch('http://localhost:8000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: `username=${username}&password=${password}`
+      body: new URLSearchParams({
+        username: username,
+        password: password,
+      }),
     });
-    
+  
     const data = await response.json();
-    
+  
     if (response.ok) {
       console.log("Token: ", data.access_token);
       navigate('/home'); 
     } else {
       console.log("Error: ", data);
-      // Aquí puedes manejar el error. Mostrar un mensaje al usuario, etc.
+      setError(data.detail || 'Ocurrió un error');  // Modificado para manejar el error de respuesta
     }
   }
-
-
+  
   return (
     <div className={classes.root}>
-      <div className={classes.overlay}></div>
+    <div className={classes.overlay}></div>
       <Container component="main" maxWidth="xs">
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Typography component="h1" variant="h5" className={classes.title}>
             Iniciar sesión
           </Typography>
+          {error && <Alert severity="error">{JSON.stringify(error)}</Alert>}
           <TextField
             variant="outlined"
             margin="normal"
