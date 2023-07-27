@@ -1,5 +1,8 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+
 
 import { 
   Container, 
@@ -11,6 +14,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 import backgroundImage from '../img/logui1.jpg'; // Import your image here
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,16 +72,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 export default function SignUpPage() {
   const classes = useStyles();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();  
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    const response = await fetch('http://localhost:8000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `username=${username}&password=${password}`
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      console.log("Token: ", data.access_token);
+      navigate('/home'); 
+    } else {
+      console.log("Error: ", data);
+      // Aquí puedes manejar el error. Mostrar un mensaje al usuario, etc.
+    }
+  }
+
 
   return (
     <div className={classes.root}>
-      <div className={classes.overlay}></div> {/* Add the overlay element */}
+      <div className={classes.overlay}></div>
       <Container component="main" maxWidth="xs">
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Typography component="h1" variant="h5" className={classes.title}>
-            Crear una cuenta
+            Iniciar sesión
           </Typography>
           <TextField
             variant="outlined"
@@ -89,17 +121,10 @@ export default function SignUpPage() {
             name="username"
             autoComplete="username"
             autoFocus
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
           />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Correo electrónico"
-            name="email"
-            autoComplete="email"
-          />
+          
           <TextField
             variant="outlined"
             margin="normal"
@@ -110,6 +135,8 @@ export default function SignUpPage() {
             type="password"
             id="password"
             autoComplete="new-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
           <Button
             type="submit"
@@ -118,13 +145,13 @@ export default function SignUpPage() {
             color="primary"
             className={classes.submit}
           >
-            Registrarse
+            Iniciar Sesión
           </Button>
 
           <Grid container>
             <Grid item>
-              <Link to="/login" >
-                ¿Ya tienes una cuenta? Inicia sesión
+              <Link to="/signup" >
+                ¿No tienes una cuenta? Crea una!
               </Link>
             </Grid>
           </Grid>

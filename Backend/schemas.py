@@ -19,6 +19,9 @@ class EstadoProgreso(Enum):
     completado = 'completado'
     en_progreso = 'en progreso'
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 class UsuarioBase(BaseModel):
     nombre_usuario: str

@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
 from schemas import EstadoTarea, EstadoHabito
+from passlib.context import CryptContext
 
 #Estos son los crud para usuarios 
 def get_user_by_email(db: Session, correo: str):
@@ -18,11 +19,14 @@ def get_user_by_user(db: Session, nombre_usuario: str):
         return db.query(models.Usuario).filter(models.Usuario.nombre_usuario == nombre_usuario).first()
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_user(db: Session, user: schemas.UsuarioCreate):
     try:
-        fake_hashed_password = user.contrasena_hash 
-        db_user = models.Usuario(nombre_usuario=user.nombre_usuario, correo=user.correo, contrasena_hash=fake_hashed_password, fecha_creacion=datetime.now())
+        hashed_password = pwd_context.hash(user.contrasena_hash)
+        db_user = models.Usuario(nombre_usuario=user.nombre_usuario, correo=user.correo, contrasena_hash=hashed_password, fecha_creacion=datetime.now())
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
@@ -58,6 +62,8 @@ def delete_user(db: Session, user_id: int):
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
 # CRUD functions for tareas
 
