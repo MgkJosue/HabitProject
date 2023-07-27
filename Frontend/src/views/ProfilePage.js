@@ -8,19 +8,59 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import backgroundImage from '../img/profile.jpg'; // Import your image here
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(8),
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.0)',
   },
   form: {
+    position: 'relative',
+    zIndex: 1,
     width: '100%',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(0),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    animation: '$fadeIn 1s',
+  },
+  title: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(2),
+    color: 'black', // Cambiar el color a negro
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+      transform: 'translateY(20px)',
+    },
+    to: {
+      opacity: 1,
+      transform: 'translateY(0)',
+    },
   },
 }));
 
@@ -28,13 +68,13 @@ export default function ProfilePage() {
   const classes = useStyles();
 
   return (
-    
-    <Container component="main" maxWidth="xs">
-      <div className={classes.root}>
-        <Typography component="h1" variant="h5">
-          Perfil de Usuario
-        </Typography>
+    <div className={classes.root}>
+      <div className={classes.overlay}></div>
+      <Container component="main" maxWidth="xs">
         <form className={classes.form} noValidate>
+          <Typography component="h1" variant="h5" className={classes.title}>
+            Perfil de Usuario
+          </Typography>
           <TextField
             variant="outlined"
             margin="normal"
@@ -84,7 +124,7 @@ export default function ProfilePage() {
             </Grid>
           </Grid>
         </form>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 }
