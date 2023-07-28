@@ -98,7 +98,7 @@ export default function HomePage() {
           </Grid>
           <Grid item xs={6}>
             <Paper className={classes.paper}>
-              <Typography variant="h5">Tus Tareas</Typography>
+              <Typography variant="h5">Tus Tareas s</Typography>
               <Button variant="contained" color="primary" onClick={() => navigate('/task-list')}>
                 Ver Tareas
               </Button>
