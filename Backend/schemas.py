@@ -22,6 +22,7 @@ class EstadoProgreso(Enum):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    user_id: int
 
 class UsuarioBase(BaseModel):
     nombre_usuario: str

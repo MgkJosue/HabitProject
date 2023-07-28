@@ -84,10 +84,11 @@ export default function SignUpPage() {
       headers: {
         'Content-Type': 'application/json',
       },
+      
       body: JSON.stringify({
         nombre_usuario: username,
         correo: email,
-        password: password,
+        contrasena_hash: password,
       }),
     });
 

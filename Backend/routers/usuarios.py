@@ -43,8 +43,19 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 @router.put("/usuarios/{user_id}", response_model=schemas.Usuario)
 def update_user(user_id: int, user: schemas.UsuarioCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
+     
+    
+    user_email = crud.get_user_by_email(db, correo=user.correo)
+    user_user = crud.get_user_by_user(db, nombre_usuario=user.nombre_usuario)
+    if user_email:
+        raise HTTPException(status_code=400, detail="Correo ya registrado")
+
+    if user_user:
+        raise HTTPException(status_code=400, detail="Nombre de usuario ya registrado")
+    
     if db_user is None:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
     return crud.update_user(db=db, user=user, user_id=user_id)
 
 # Borrar un usuario
@@ -64,9 +75,12 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
             detail="Credenciales incorrectas",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
     # If correct, create a new token and return it
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.nombre_usuario}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+        data={"sub": user.nombre_usuario, "user_id": user.id_usuario}, 
+        expires_delta=access_token_expires
+        )
+    
+    return {"access_token": access_token, "token_type": "bearer",  "user_id": user.id_usuario}

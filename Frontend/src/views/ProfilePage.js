@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Container, 
   Typography, 
@@ -66,6 +66,37 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProfilePage() {
   const classes = useStyles();
+
+  // Definir el estado inicial de los campos del formulario
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevenir la recarga de la página
+    
+    // Crear el objeto de la petición
+    const userToUpdate = {
+      nombre_usuario: username,
+      correo: email,
+      contrasena_hash: password
+    };
+    
+    // Realizar la petición a la API
+    const response = await fetch("http://localhost:8000/usuarios/5", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userToUpdate),
+    });
+    
+    if(response.ok) {
+      alert("Los datos se han actualizado correctamente");
+    } else {
+      alert("Ha habido un error al actualizar los datos");
+    }
+  };
 
   return (
     <div className={classes.root}>
