@@ -3,3 +3,5 @@ sqlalchemy
 pydantic
 mysql-connector-python
 uvicorn
+passlib[bcrypt] 
+python-jose[cryptography]

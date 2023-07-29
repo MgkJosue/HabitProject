@@ -107,7 +107,7 @@ export default function LoginPage() {
       console.log("Token: ", data.access_token);
       sessionStorage.setItem('userId', data.user_id); // Guarda el id del usuario
       sessionStorage.setItem('token', data.access_token); // Guarda el token en sessionStorage
-      navigate('/home'); 
+      navigate('/main'); 
     } else {
       console.log("Error: ", data);
       setError(data.detail || 'Ocurrió un error');  // Modificado para manejar el error de respuesta

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Container, 
   Typography, 
@@ -66,24 +67,39 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProfilePage() {
   const classes = useStyles();
+  const navigate = useNavigate();
+
+  // Obtener el id del usuario del sessionStorage
+  const id = window.sessionStorage.getItem('userId');
 
   // Definir el estado inicial de los campos del formulario
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Cargar los datos del usuario cuando el componente se monta
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await fetch(`http://localhost:8000/usuarios/${id}`);
+      const data = await response.json();
+
+      setUsername(data.nombre_usuario);
+      setEmail(data.correo);
+    };
+
+    fetchUser();
+  }, [id]);
+
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevenir la recarga de la página
+    event.preventDefault();
     
-    // Crear el objeto de la petición
     const userToUpdate = {
       nombre_usuario: username,
       correo: email,
       contrasena_hash: password
     };
     
-    // Realizar la petición a la API
-    const response = await fetch("http://localhost:8000/usuarios/5", {
+    const response = await fetch(`http://localhost:8000/usuarios/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -93,6 +109,7 @@ export default function ProfilePage() {
     
     if(response.ok) {
       alert("Los datos se han actualizado correctamente");
+      navigate('/main');
     } else {
       alert("Ha habido un error al actualizar los datos");
     }
@@ -102,7 +119,7 @@ export default function ProfilePage() {
     <div className={classes.root}>
       <div className={classes.overlay}></div>
       <Container component="main" maxWidth="xs">
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Typography component="h1" variant="h5" className={classes.title}>
             Perfil de Usuario
           </Typography>
@@ -116,6 +133,8 @@ export default function ProfilePage() {
             name="username"
             autoComplete="username"
             autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -127,6 +146,8 @@ export default function ProfilePage() {
             type="email"
             id="email"
             autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -137,6 +158,8 @@ export default function ProfilePage() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <Button
             type="submit"
@@ -147,13 +170,6 @@ export default function ProfilePage() {
           >
             Guardar Cambios
           </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Button variant="contained" color="secondary">
-                Cambiar Contraseña
-              </Button>
-            </Grid>
-          </Grid>
         </form>
       </Container>
     </div>
