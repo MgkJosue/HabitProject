@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Grid, Paper, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Checkbox from '@material-ui/core/Checkbox';
+import { useNavigate } from 'react-router-dom';
 
-import backgroundImage from '../img/sunrise-g96940d752_1280.jpg'; // Ruta de la imagen local
+import backgroundImage from '../img/sunrise-g96940d752_1280.jpg';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,59 +49,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TaskListPage() {
+  const navigate = useNavigate();
   const classes = useStyles();
-  // Aquí se supone que las tareas se obtendrían de tu backend
-  const tasks = [
-    {
-      id: 1,
-      title: 'Tarea 1',
-      description: 'Descripción de la tarea 1',
-      completed: false,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    
-    // Agrega más tareas aquí si es necesario
-  ];
+  const [tasks, setTasks] = useState([]);
+  
+  useEffect(() => {
+    const userId = sessionStorage.getItem('userId');
+    fetch(`http://localhost:8000/tareas/${userId}`) // Cambia la URL si es necesario
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se encontraron tareas para este usuario');
+        }
+        return response.json();
+      })
+      .then(data => setTasks(data))
+      .catch(error => console.error('Hubo un error al obtener las tareas:', error));
+  }, []);
 
   return (
     <Container component="main" maxWidth="md">
       <div className={classes.root}>
-      <Typography component="h1" variant="h7" className={classes.title}>
+        <Typography component="h1" variant="h7" className={classes.title}>
           Mis Tareas
         </Typography>
         <Button
@@ -107,11 +77,12 @@ function TaskListPage() {
           color="primary"
           startIcon={<AddIcon />}
           className={classes.addButton}
+          onClick={() => navigate('/task')}
         >
           Nueva Tarea
         </Button>
         <div className={classes.taskContainer}>
-          {tasks.map((task) => (
+          {tasks.length > 0 ? tasks.map((task) => (
             <Paper key={task.id} className={classes.paper}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item>
@@ -131,11 +102,11 @@ function TaskListPage() {
                   </IconButton>
                 </Grid>
               </Grid>
-            </Paper>
-          ))}
+            </Paper> )) : <Typography variant="h6">No existen tareas</Typography>}
         </div>
       </div>
     </Container>
   );
 }
+
 export default TaskListPage;

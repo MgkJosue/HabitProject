@@ -72,6 +72,14 @@ def get_tareas(db: Session, skip: int = 0, limit: int = 100):
         return db.query(models.Tarea).offset(skip).limit(limit).all()
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+def get_tareas_by_user_id(db: Session, user_id: int):
+    try:
+        return db.query(models.Tarea).filter(models.Tarea.id_usuario == user_id).all()
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 def create_user_tarea(db: Session, tarea: schemas.TareaCreate, user_id: int):
     try:
