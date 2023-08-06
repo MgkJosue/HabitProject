@@ -45,12 +45,14 @@ def update_user(db: Session, user: schemas.UsuarioCreate, user_id: int):
         db_user = db.query(models.Usuario).filter(models.Usuario.id_usuario == user_id).first()
         db_user.nombre_usuario = user.nombre_usuario
         db_user.correo = user.correo
-        db_user.contrasena_hash = user.contrasena_hash
+        hashed_password = pwd_context.hash(user.contrasena_hash)  # Encripta la nueva contraseña
+        db_user.contrasena_hash = hashed_password  # Asigna la contraseña encriptada
         db.commit()
         db.refresh(db_user)
         return db_user
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 def delete_user(db: Session, user_id: int):
     try:

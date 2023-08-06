@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],  # Permite todas las cabeceras
 )
 
-
+# Añade los routers después de haber configurado el middleware de CORS
 app.include_router(usuarios_router)
 app.include_router(tareas_router)
 app.include_router(habitos_router)

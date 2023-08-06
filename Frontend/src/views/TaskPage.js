@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import backgroundImage1 from '../img/logui1.jpg';
 import backgroundImage2 from '../img/profile.jpg';
 import backgroundImage3 from '../img/signup.jpg';
+import { useNavigate } from 'react-router-dom';
+
 
 const images = [backgroundImage1, backgroundImage2, backgroundImage3];
 
@@ -81,6 +83,7 @@ export default function TaskPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Función para cambiar la imagen cada 5 segundos
@@ -106,14 +109,23 @@ export default function TaskPage() {
         id_usuario: Number(userId),
         titulo_tarea: title,
         descripcion_tarea: description,
-        fecha_vencimiento_tarea: dueDate,
+        fecha_vencimiento_tarea: `${dueDate}T00:00:00Z`,  // Añade la hora manualmente
       }),
-    };
+    };  
 
     // Enviar la solicitud
     fetch('http://localhost:8000/tarea/', requestOptions)
-      .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Hubo un error al crear la tarea.');
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        navigate('/task-list');  // Navega a '/task-list' después de crear la tarea
+      })
       .catch((error) => console.error('Hubo un error al crear la tarea:', error));
   };
 

@@ -52,6 +52,23 @@ function TaskListPage() {
   const navigate = useNavigate();
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
+  const deleteTask = (taskId) => {
+    if(window.confirm('¿Estás seguro que deseas eliminar esta tarea?')) {
+      fetch(`http://localhost:8000/tarea/${taskId}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al eliminar la tarea');
+        }
+        // Actualiza la lista de tareas en el estado del componente
+        setTasks(tasks.filter(task => task.id_tarea !== taskId));
+      })
+      .catch(error => console.error('Hubo un error al eliminar la tarea:', error));
+    }
+  }
+
+
   
   useEffect(() => {
     const userId = sessionStorage.getItem('userId');
@@ -83,21 +100,21 @@ function TaskListPage() {
         </Button>
         <div className={classes.taskContainer}>
           {tasks.length > 0 ? tasks.map((task) => (
-            <Paper key={task.id} className={classes.paper}>
+            <Paper key={task.id_tarea} className={classes.paper}>
               <Grid container justify="space-between" alignItems="center">
                 <Grid item>
                   <Checkbox
-                    checked={task.completed}
+                    checked={task.estado_tarea === 'completado'} // Esto asume que 'completado' es el estado para una tarea terminada.
                     onChange={() => {}}
                   />
-                  <Typography variant="h6">{task.title}</Typography>
-                  <Typography variant="body1">{task.description}</Typography>
+                  <Typography variant="h6">{task.titulo_tarea}</Typography>
+                  <Typography variant="body1">{task.descripcion_tarea}</Typography>
                 </Grid>
                 <Grid item>
                   <IconButton aria-label="edit">
                     <EditIcon />
                   </IconButton>
-                  <IconButton aria-label="delete">
+                  <IconButton aria-label="delete" onClick={() => deleteTask(task.id_tarea)}>
                     <DeleteIcon />
                   </IconButton>
                 </Grid>
