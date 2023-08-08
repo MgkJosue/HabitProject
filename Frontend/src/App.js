@@ -21,7 +21,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/profile" element={<ProfilePage/>} />
-        <Route path="/task" element={<TaskPage/>} />
+        <Route path="/task/:taskId" element={<TaskPage />} />
         <Route path="/task-list" element={<TaskListPage/>} />
         <Route path="/habit" element={<HabitPage/>} />
         <Route path="/habit-list" element={<HabitListPage/>} />

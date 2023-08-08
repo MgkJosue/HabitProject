@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import backgroundImage1 from '../img/logui1.jpg';
 import backgroundImage2 from '../img/profile.jpg';
 import backgroundImage3 from '../img/signup.jpg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 const images = [backgroundImage1, backgroundImage2, backgroundImage3];
@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TaskPage() {
   const classes = useStyles();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { taskId } = useParams();
 
   // Añade estado para cada campo del formulario
   const [title, setTitle] = useState('');
@@ -95,38 +96,61 @@ export default function TaskPage() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const editTask = JSON.parse(sessionStorage.getItem('editTask'));
+    if (editTask) {
+      setTitle(editTask.titulo_tarea);
+      setDescription(editTask.descripcion_tarea);
+      setDueDate(editTask.fecha_vencimiento_tarea.split('T')[0]);  // Solo tomar la fecha, no la hora
+      // Luego de obtener los datos, puedes eliminarlos del sessionStorage para no tener datos obsoletos.
+      sessionStorage.removeItem('editTask');
+    }
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Recuperar userId del SessionStorage
     const userId = sessionStorage.getItem('userId');
 
-    // Configurar la solicitud
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id_usuario: Number(userId),
-        titulo_tarea: title,
-        descripcion_tarea: description,
-        fecha_vencimiento_tarea: `${dueDate}T00:00:00Z`,  // Añade la hora manualmente
-      }),
-    };  
+    const taskData = {
+      id_usuario: Number(userId),
+      titulo_tarea: title,
+      descripcion_tarea: description,
+      fecha_vencimiento_tarea: `${dueDate}T00:00:00Z`,
+    };
 
-    // Enviar la solicitud
-    fetch('http://localhost:8000/tarea/', requestOptions)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Hubo un error al crear la tarea.');
-        }
+    if (taskId && taskId !== 'new') {
+      // Si estamos en modo edición, actualizamos la tarea
+      fetch(`http://localhost:8000/tarea/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(taskData),
       })
-      .then((data) => {
-        console.log(data);
-        navigate('/task-list');  // Navega a '/task-list' después de crear la tarea
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Hubo un error al actualizar la tarea.');
+          }
+          navigate('/task-list');
+        })
+        .catch(error => console.error('Hubo un error al actualizar la tarea:', error));
+    } else if (taskId === 'new') {
+      // Si estamos en modo creación, creamos una nueva tarea
+      fetch('http://localhost:8000/tarea/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(taskData),
       })
-      .catch((error) => console.error('Hubo un error al crear la tarea:', error));
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Hubo un error al crear la tarea.');
+          }
+          navigate('/task-list');
+        })
+        .catch(error => console.error('Hubo un error al crear la tarea:', error));
+    }
+    else {
+      console.error('No se especificó un taskId válido.');
+    }
   };
 
   return (

@@ -68,6 +68,10 @@ function TaskListPage() {
     }
   }
 
+  const handleEditTask = (task) => {
+    navigate(`/task/${task.id_tarea}`);
+    sessionStorage.setItem('editTask', JSON.stringify(task));
+}
 
   
   useEffect(() => {
@@ -94,10 +98,14 @@ function TaskListPage() {
           color="primary"
           startIcon={<AddIcon />}
           className={classes.addButton}
-          onClick={() => navigate('/task')}
+          onClick={() => {
+            sessionStorage.removeItem('editTask'); // Asegúrate de que no haya datos de edición en el sessionStorage
+            navigate('/task/new'); // Navega hacia "/task/new" para crear una tarea nueva
+          }}
         >
           Nueva Tarea
         </Button>
+
         <div className={classes.taskContainer}>
           {tasks.length > 0 ? tasks.map((task) => (
             <Paper key={task.id_tarea} className={classes.paper}>
@@ -111,9 +119,9 @@ function TaskListPage() {
                   <Typography variant="body1">{task.descripcion_tarea}</Typography>
                 </Grid>
                 <Grid item>
-                  <IconButton aria-label="edit">
+                <IconButton aria-label="edit" onClick={() => handleEditTask(task)}>
                     <EditIcon />
-                  </IconButton>
+                </IconButton>
                   <IconButton aria-label="delete" onClick={() => deleteTask(task.id_tarea)}>
                     <DeleteIcon />
                   </IconButton>
