@@ -14,11 +14,12 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
+import backgroundImage from '../img/Mowq.gif';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    background: '#d1d0e0',
+    background: '#1a222d',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -42,11 +43,33 @@ const useStyles = makeStyles((theme) => ({
   pageWrapper: {
     display: 'flex',
     flexDirection: 'column',
+    padding: theme.spacing(2),
     minHeight: '100vh',
+  },
+  sideContainers: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  cont1: {
+    // Estilos específicos para cont1 (lado derecho)
+  },
+  cont2: {
+    width: '50%', // Ocupar todo el ancho del viewport
+    height: '690px', // Ocupar todo el alto del viewport
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundRepeat: 'no-repeat', // Evitar repetición del fondo
+    margin: '10%',
+    borderRadius:"30%",
+    
   },
   footer: {
     marginTop: 'auto',
   },
+  AppBar: {
+    
+    backgroundColor: '#34b3b3',
+  }
 }));
 
 export default function MainPage() {
@@ -80,9 +103,10 @@ export default function MainPage() {
     navigate('/login');
   };
 
+
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ backgroundColor: '#34b3b3' }}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -123,73 +147,154 @@ export default function MainPage() {
         </Toolbar>
       </AppBar>
       <div className={classes.pageWrapper}>
-        <Container class="cont1">
-        <h1>Hola Mndo</h1>
-        </Container>
-        <Container class="cont2">
+        <div className={classes.sideContainers}>
+          <div className={classes.cont2}>
+
+            <Container class = "container2" maxWidth="md">
+              <Grid container spacing={2}>
+                
+              </Grid>
+            </Container>
+          </div>
+          <div className={classes.cont1}>
           <Container maxWidth="md">
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h4">
-                    Bienvenido a tu Gestor de Hábitos y Tareas, {username}
-                  </Typography>
-                  <Typography variant="body1">
-                    Organiza tu vida y mejora tus hábitos con nuestro gestor
-                  </Typography>
-                </Paper>
-              </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5">Tus Tareas</Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate('/task-list')}
-                  >
-                    Ver Tareas
-                  </Button>
-                </Paper>
-              </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5">Tus Hábitos</Typography>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => navigate('/habit-list')}
-                  >
-                    Ver Hábitos
-                  </Button>
-                </Paper>
-              </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5">Tus Hábitos</Typography>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => navigate('/habit-list')}
-                  >
-                    Ver Hábitos
-                  </Button>
-                </Paper>
-              </Grid>
-              <Grid item xs={6}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5">Tus Hábitos</Typography>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => navigate('/habit-list')}
-                  >
-                    Ver Hábitos
-                  </Button>
-                </Paper>
-              </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <Typography variant="h4">
+                  Bienvenido a tu Gestor de Hábitos y Tareas, {username}
+                </Typography>
+                <Typography variant="body1">
+                  Organiza tu vida y mejora tus hábitos con nuestro gestor
+                </Typography>
+              </Paper>
             </Grid>
-          </Container>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Tareas</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/task-list')}
+                >
+                  Ver Tareas
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Tareas</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/task-list')}
+                >
+                  Ver Tareas
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Tareas</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/task-list')}
+                >
+                  Ver Tareas
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Tareas</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/task-list')}
+                >
+                  Ver Tareas
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Tareas</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/task-list')}
+                >
+                  Ver Tareas
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Tareas</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/task-list')}
+                >
+                  Ver Tareas
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Tareas</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/task-list')}
+                >
+                  Ver Tareas
+                </Button>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Hábitos</Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => navigate('/habit-list')}
+                >
+                  Ver Hábitos
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Hábitos</Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => navigate('/habit-list')}
+                >
+                  Ver Hábitos
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={6}>
+              <Paper className={classes.paper}>
+                <Typography variant="h5">Tus Hábitos</Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => navigate('/habit-list')}
+                >
+                  Ver Hábitos
+                </Button>
+              </Paper>
+            </Grid>
+          </Grid>
         </Container>
+          </div>
+        </div>
+        
       </div>
       <footer>
         <Container

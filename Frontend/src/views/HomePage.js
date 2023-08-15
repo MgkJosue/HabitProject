@@ -8,8 +8,8 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 
 const HomePage = () => {
   return (
-    <div style={{ backgroundColor: 'black', color: 'white', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <AppBar position="sticky" style={{ backgroundColor: '#00ff40' }}>
+    <div style={{ backgroundColor: '#1a222d', color: 'white', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <AppBar position="sticky" style={{ backgroundColor: '#34b3b3' }}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="logo">
             <HomeIcon />
