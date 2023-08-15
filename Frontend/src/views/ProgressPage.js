@@ -8,8 +8,10 @@ import {
   Paper,
   Container,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useNavigate } from 'react-router-dom';
+
 // Importando componentes de Recharts
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 
@@ -69,19 +71,24 @@ export default function ProgressPage() {
     { name: 'Domingo', Tareas: 4, Hábitos: 6 },
     // Añade más datos aquí...
   ];
+  const navigate = useNavigate();
+
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Gestor de Hábitos y Tareas
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={() => {
+            navigate(-1); // Vuelve a la página anterior
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
 
       <Container maxWidth="xl" style={{ height: '100%' }}>
         <Grid container spacing={3} style={{ height: '100%', display: 'flex' }}>

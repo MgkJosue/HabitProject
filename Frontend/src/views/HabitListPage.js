@@ -6,6 +6,9 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import { AppBar, Toolbar } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 import backgroundImage from '../img/sunrise-g96940d752_1280.jpg'; // Ruta de la imagen local
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +38,12 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     color: '#FFFFFF', // Cambiar el color a blanco
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  spacer: {
+    flex: 1,
+  }
 }));
 
 function HabitListPage() {
@@ -76,16 +85,22 @@ function HabitListPage() {
   }, []);
 
   return (
-    <Container component="main" maxWidth="md">
-      <div className={classes.root}>
-        <Typography component="h1" variant="h5" className={classes.title}>
-          Mis Hábitos
-        </Typography>
+    <>
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={() => {
+            navigate(-1); // Vuelve a la página anterior
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography variant="h6" className={classes.spacer}></Typography>
         <Button
-          variant="contained"
-          color="primary"
+          color="inherit"
           startIcon={<AddIcon />}
-          className={classes.habitList}
           onClick={() => {
             sessionStorage.removeItem('editHabit');
             navigate('/habit/new');
@@ -93,6 +108,14 @@ function HabitListPage() {
         >
           Nuevo Hábito
         </Button>
+      </Toolbar>
+    </AppBar>
+    <Container component="main" maxWidth="md">
+      <div className={classes.root}>
+        
+        <Typography component="h1" variant="h5" className={classes.title}>
+          Mis Hábitos
+        </Typography>
 
         {habits.map((habit) => (
           <Paper key={habit.id_habito} className={classes.paper}>
@@ -118,6 +141,7 @@ function HabitListPage() {
         ))}
       </div>
     </Container>
+    </>
   );
 }
 

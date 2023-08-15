@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, TextField, Button } from '@material-ui/core';
+import { Container, Typography, TextField, Button,IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { AppBar, Toolbar } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import backgroundImage1 from '../img/logui1.jpg';
 import backgroundImage2 from '../img/profile.jpg';
@@ -88,6 +89,12 @@ const useStyles = makeStyles((theme) => ({
       transform: 'scale(1)',
     },
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  spacer: {
+    flex: 1,
+  }
 }));
 
 export default function HabitEditPage() {
@@ -156,6 +163,20 @@ export default function HabitEditPage() {
   };
 
   return (
+    <>
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={() => {
+            navigate(-1); // Vuelve a la página anterior
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
     <div
       className={classes.root}
       style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
@@ -201,5 +222,6 @@ export default function HabitEditPage() {
         </form>
       </Container>
     </div>
+    </>
   );
 }

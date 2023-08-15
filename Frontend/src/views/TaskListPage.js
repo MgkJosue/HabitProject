@@ -6,6 +6,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar } from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import backgroundImage from '../img/sunrise-g96940d752_1280.jpg';
 
@@ -46,6 +48,12 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     color: '#FFFFFF', // Cambiar el color a blanco
   },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  spacer: {
+    flex: 1,
+  }
 }));
 
 function TaskListPage() {
@@ -88,14 +96,21 @@ function TaskListPage() {
   }, []);
 
   return (
-    <Container component="main" maxWidth="md">
-      <div className={classes.root}>
-        <Typography component="h1" variant="h7" className={classes.title}>
-          Mis Tareas
-        </Typography>
+    <>
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={() => {
+            navigate(-1); // Vuelve a la página anterior
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography variant="h6" className={classes.spacer}></Typography>
         <Button
-          variant="contained"
-          color="primary"
+          color="inherit"
           startIcon={<AddIcon />}
           className={classes.addButton}
           onClick={() => {
@@ -105,6 +120,14 @@ function TaskListPage() {
         >
           Nueva Tarea
         </Button>
+      </Toolbar>
+    </AppBar>
+    <Container component="main" maxWidth="md">
+      <div className={classes.root}>
+        <Typography component="h1" variant="h7" className={classes.title}>
+          Mis Tareas
+        </Typography>
+        
 
         <div className={classes.taskContainer}>
           {tasks.length > 0 ? tasks.map((task) => (
@@ -131,6 +154,7 @@ function TaskListPage() {
         </div>
       </div>
     </Container>
+    </>
   );
 }
 
