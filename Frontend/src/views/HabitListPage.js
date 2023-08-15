@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, Grid, Paper, IconButton, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
@@ -37,22 +38,42 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function HabitListPage() {
+  const navigate = useNavigate();
   const classes = useStyles();
-  // Aquí se supone que los hábitos se obtendrían de tu backend
-  const habits = [
-    {
-      id: 1,
-      name: 'Hábito 1',
-      description: 'Descripción del hábito 1',
-      completed: false,
-    },
-    {
-      id: 2,
-      name: 'Hábito 2',
-      description: 'Descripción del hábito 2',
-      completed: true,
-    },
-  ];
+  const [habits, setHabits] = useState([]);
+
+  const deleteHabit = (habitId) => {
+    if (window.confirm('¿Estás seguro que deseas eliminar este hábito?')) {
+      fetch(`http://localhost:8000/habitos/${habitId}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al eliminar el hábito');
+        }
+        setHabits(habits.filter(habit => habit.id_habito !== habitId));
+      })
+      .catch(error => console.error('Hubo un error al eliminar el hábito:', error));
+    }
+  }
+
+  const handleEditHabit = (habit) => {
+    navigate(`/habit/${habit.id_habito}`);
+    sessionStorage.setItem('editHabit', JSON.stringify(habit));
+  }
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem('userId');
+    fetch(`http://localhost:8000/habitos/${userId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se encontraron hábitos para este usuario');
+        }
+        return response.json();
+      })
+      .then(data => setHabits(data))
+      .catch(error => console.error('Hubo un error al obtener los hábitos:', error));
+  }, []);
 
   return (
     <Container component="main" maxWidth="md">
@@ -65,26 +86,30 @@ function HabitListPage() {
           color="primary"
           startIcon={<AddIcon />}
           className={classes.habitList}
+          onClick={() => {
+            sessionStorage.removeItem('editHabit');
+            navigate('/habit/new');
+          }}
         >
           Nuevo Hábito
         </Button>
+
         {habits.map((habit) => (
-          <Paper key={habit.id} className={classes.paper}>
+          <Paper key={habit.id_habito} className={classes.paper}>
             <Grid container justify="space-between" alignItems="center">
               <Grid item>
                 <Checkbox
                   checked={habit.completed}
-                  // Aquí se gestionaría el cambio de estado del hábito
                   onChange={() => {}}
                 />
-                <Typography variant="h6">{habit.name}</Typography>
-                <Typography variant="body1">{habit.description}</Typography>
+                <Typography variant="h6">{habit.titulo_habito}</Typography>
+                <Typography variant="body1">{habit.descripcion_habito}</Typography>
               </Grid>
               <Grid item>
-                <IconButton aria-label="edit">
+                <IconButton aria-label="edit" onClick={() => handleEditHabit(habit)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton aria-label="delete">
+                <IconButton aria-label="delete" onClick={() => deleteHabit(habit.id_habito)}>
                   <DeleteIcon />
                 </IconButton>
               </Grid>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useNavigate, useParams } from 'react-router-dom';
+
 
 import backgroundImage1 from '../img/logui1.jpg';
 import backgroundImage2 from '../img/profile.jpg';
@@ -91,16 +93,67 @@ const useStyles = makeStyles((theme) => ({
 export default function HabitEditPage() {
   const classes = useStyles();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { habitId } = useParams();
+
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Función para cambiar la imagen cada 5 segundos
+    const editHabit = JSON.parse(sessionStorage.getItem('editHabit'));
+    if (editHabit) {
+      setTitle(editHabit.titulo_habito);
+      setDescription(editHabit.descripcion_habito);
+      sessionStorage.removeItem('editHabit');
+    }
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // 5000 milisegundos = 5 segundos
-
-    // Limpieza del intervalo cuando el componente se desmonta
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userId = sessionStorage.getItem('userId');
+    const habitData = {
+      id_usuario: Number(userId),
+      titulo_habito: title,
+      descripcion_habito: description,
+    };
+
+    if (habitId && habitId !== 'new') {
+      fetch(`http://localhost:8000/habitos/${habitId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(habitData),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Hubo un error al actualizar el hábito.');
+          }
+          navigate('/habit-list');
+        })
+        .catch(error => console.error('Hubo un error al actualizar el hábito:', error));
+    } else if (habitId === 'new') {
+      fetch('http://localhost:8000/habitos/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(habitData),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Hubo un error al crear el hábito.');
+          }
+          navigate('/habit-list');
+        })
+        .catch(error => console.error('Hubo un error al crear el hábito:', error));
+    } else {
+      console.error('No se especificó un habitId válido.');
+    }
+  };
 
   return (
     <div
@@ -109,7 +162,7 @@ export default function HabitEditPage() {
     >
       <div className={classes.overlay}></div>
       <Container component="main" maxWidth="xs">
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Typography component="h1" variant="h5" className={classes.title}>
             Editar Hábito
           </Typography>
@@ -122,6 +175,8 @@ export default function HabitEditPage() {
             label="Título del Hábito"
             name="title"
             autoFocus
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -131,6 +186,8 @@ export default function HabitEditPage() {
             name="description"
             label="Descripción del Hábito"
             id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
           <Button
             type="submit"

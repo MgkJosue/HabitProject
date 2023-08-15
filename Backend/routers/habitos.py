@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal
 import schemas
-from crud import get_habito, create_habito, get_habito_by_id, update_habito, delete_habito
+from crud import get_habito, create_habito, get_habitos_by_user_id, update_habito, delete_habito
 from sqlalchemy.exc import SQLAlchemyError
 from pydantic import ValidationError
 
@@ -41,12 +41,14 @@ def create_habitos(habito: schemas.HabitoCreate, db: Session = Depends(get_db)):
 
 
 # Obtener un hábito por su ID
-@router.get("/habitos/{id_habito}", response_model=schemas.Habito)
-def read_habito(id_habito: int, db: Session = Depends(get_db)):
-    habito = get_habito_by_id(db, id_habito=id_habito)
-    if habito is None:
-        raise HTTPException(status_code=404, detail="Habito no encontrado")
-    return habito
+@router.get("/habitos/{user_id}", response_model=List[schemas.Habito])
+def leer_habitos_por_usuario(user_id: int, db: Session = Depends(get_db)):
+    habitos = get_habitos_by_user_id(db, user_id=user_id)
+    if not habitos:
+        raise HTTPException(status_code=404, detail="No se encontraron habitos para este usuario")
+    return habitos
+
+
 
 # Actualizar un hábito
 @router.put("/habitos/{id_habito}", response_model=schemas.Habito)

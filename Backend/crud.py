@@ -96,7 +96,6 @@ def create_user_tarea(db: Session, tarea: schemas.TareaCreate, user_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
 def get_tarea(db: Session, id: int):
     try:
         return db.query(models.Tarea).filter(models.Tarea.id_tarea == id).first()
@@ -183,6 +182,13 @@ def delete_habito(db: Session, id_habito: int):
         return db_habito
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+def get_habitos_by_user_id(db: Session, user_id: int):
+    try:
+        return db.query(models.Habito).filter(models.Habito.id_usuario == user_id).all()
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 #Estos son los crud para progresos
