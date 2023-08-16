@@ -1,183 +1,132 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, Button, Grid, Paper, IconButton } from '@material-ui/core';
+import React from 'react';
+import { Container, Typography, Button, Grid, Paper, IconButton, AppBar, Toolbar, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Checkbox from '@material-ui/core/Checkbox';
-import { useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
-import backgroundImage from '../img/sunrise-g96940d752_1280.jpg';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(10),
+    marginTop: theme.spacing(8),
     display: 'flex',
+    background: '#1a222d',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundImage: `url(${backgroundImage})`, // Ruta de la imagen de fondo
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    minHeight: '70vh', // Asegura que el fondo cubra toda la pantalla
-    backgroundColor: '#000000',// Asegura que el fondo cubra toda la pantalla
+    minHeight: '100vh',
   },
-  taskContainer: {
-    maxHeight: '430px',
-    overflowY: 'auto',
-    width: '50%',
-    marginTop: theme.spacing(8),
-    borderRadius: '10px', // Agregar el borde redondeado al contenedor
+  taskList: {
+    marginTop: theme.spacing(6),
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     margin: '10px 0',
-    backgroundColor: '#d1d0e0', // Color celeste pastel (ajusta según tus preferencias)
-  },
-  addButton: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    margin: theme.spacing(2),
-  },
-  title: {
-    fontSize: '2rem',
-    fontWeight: 'bold',
-    marginBottom: theme.spacing(2),
-    color: '#FFFFFF', // Cambiar el color a blanco
+    background: 'rgba(52, 179, 179, 0.2)', // Cambia el color de fondo a transparente verdoso
+    color: '#fff',
+    transition: 'transform 0.2s ease-in-out',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0px 0px 10px rgba(0, 255, 64, 0.8)',
+      border: '2px solid #00ff40',
+    },
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1,
+    background: '#34b3b3',
   },
-  spacer: {
-    flex: 1,
-  }
+  toolbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  taskContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexGrow: 1,
+  },
+  gridContainer: {
+    marginTop: theme.spacing(3),
+  },
 }));
 
 function TaskListPage() {
-  const navigate = useNavigate();
   const classes = useStyles();
-  const [tasks, setTasks] = useState([]);
-  const deleteTask = (taskId) => {
-    if(window.confirm('¿Estás seguro que deseas eliminar esta tarea?')) {
-      fetch(`http://localhost:8000/tarea/${taskId}`, {
-        method: 'DELETE',
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al eliminar la tarea');
-        }
-        // Actualiza la lista de tareas en el estado del componente
-        setTasks(tasks.filter(task => task.id_tarea !== taskId));
-      })
-      .catch(error => console.error('Hubo un error al eliminar la tarea:', error));
-    }
-  }
-
-  const toggleTaskStatus = (task) => {
-    const newStatus = task.estado_tarea === 'completada' ? 'pendiente' : 'completada';
-
-    // Construyendo la URL con el parámetro de consulta
-    const url = `http://localhost:8000/tarea/${task.id_tarea}/estado?estado=${newStatus}`;
-
-    fetch(url, {
-        method: 'PATCH'
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al actualizar el estado de la tarea');
-        }
-        return response.json();
-    })
-    .then(updatedTask => {
-        setTasks(tasks.map(t => t.id_tarea === updatedTask.id_tarea ? updatedTask : t));
-    })
-    .catch(error => console.error('Hubo un error al actualizar el estado:', error));
-}
-
-
-  const handleEditTask = (task) => {
-    navigate(`/task/${task.id_tarea}`);
-    sessionStorage.setItem('editTask', JSON.stringify(task));
-}
-
-  
-  useEffect(() => {
-    const userId = sessionStorage.getItem('userId');
-    fetch(`http://localhost:8000/tareas/${userId}`) // Cambia la URL si es necesario
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('No se encontraron tareas para este usuario');
-        }
-        return response.json();
-      })
-      .then(data => setTasks(data))
-      .catch(error => console.error('Hubo un error al obtener las tareas:', error));
-  }, []);
+  // Aquí se supone que las tareas se obtendrían de tu backend
+  const tasks = [
+    {
+      id: 1,
+      title: 'Tarea 1',
+      description: 'Descripción de la tarea 1',
+      completed: false,
+    },
+    {
+      id: 2,
+      title: 'Tarea 2',
+      description: 'Descripción de la tarea 2',
+      completed: true,
+    },
+    {
+      id: 1,
+      title: 'Tarea 1',
+      description: 'Descripción de la tarea 1',
+      completed: false,
+    },
+    {
+      id: 2,
+      title: 'Tarea 2',
+      description: 'Descripción de la tarea 2',
+      completed: true,
+    },
+    
+  ];
 
   return (
-    <>
-    <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          onClick={() => {
-            navigate(-1); // Vuelve a la página anterior
-          }}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.spacer}></Typography>
-        <Button
-          color="inherit"
-          startIcon={<AddIcon />}
-          className={classes.addButton}
-          onClick={() => {
-            sessionStorage.removeItem('editTask'); // Asegúrate de que no haya datos de edición en el sessionStorage
-            navigate('/task/new'); // Navega hacia "/task/new" para crear una tarea nueva
-          }}
-        >
-          Nueva Tarea
-        </Button>
-      </Toolbar>
-    </AppBar>
-    <Container component="main" maxWidth="md">
-      <div className={classes.root}>
-        <Typography component="h1" variant="h7" className={classes.title}>
-          Mis Tareas
-        </Typography>
-        
-
-        <div className={classes.taskContainer}>
-          {tasks.length > 0 ? tasks.map((task) => (
-            <Paper key={task.id_tarea} className={classes.paper}>
-              <Grid container justify="space-between" alignItems="center">
-                <Grid item>
+    <div className={classes.root}>
+      <Container component="main" className={classes.root}>
+        <AppBar className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+            <Typography variant="h6">Mis Tareas</Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              className={classes.taskList}
+            >
+              Nueva Tarea
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Grid container spacing={3} className={classes.gridContainer}>
+          {tasks.map((task) => (
+            <Grid key={task.id} item xs={12} sm={6} md={4}>
+              <Paper className={classes.paper}>
+                <div className={classes.taskContainer}>
                   <Checkbox
-                      checked={task.estado_tarea === 'completada'}
-                      onChange={() => toggleTaskStatus(task)}
+                    checked={task.completed}
+                    // Aquí se gestionaría el cambio de estado de la tarea
+                    onChange={() => {}}
                   />
-                  <Typography variant="h6">{task.titulo_tarea}</Typography>
-                  <Typography variant="body1">{task.descripcion_tarea}</Typography>
-                  <Typography variant="body1">{task.estado_tarea}</Typography>
-                </Grid>
-                <Grid item>
-                <IconButton aria-label="edit" onClick={() => handleEditTask(task)}>
+                  <Typography variant="h6">{task.title}</Typography>
+                  <Typography variant="body1">{task.description}</Typography>
+                  <IconButton aria-label="edit">
                     <EditIcon />
-                </IconButton>
-                  <IconButton aria-label="delete" onClick={() => deleteTask(task.id_tarea)}>
+                  </IconButton>
+                  <IconButton aria-label="delete">
                     <DeleteIcon />
                   </IconButton>
-                </Grid>
-              </Grid>
-            </Paper> )) : <Typography variant="h6">No existen tareas</Typography>}
-        </div>
-      </div>
-    </Container>
-    </>
+                </div>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+      <Box bgcolor="secondary.main" color="secondary.contrastText" py={3}>
+        <Container maxWidth="md">
+          <Typography align="center" color="inherit" gutterBottom>
+            © 2023 Mi App | Todos los derechos reservados |
+          </Typography>
+        </Container>
+      </Box>
+    </div>
   );
 }
 

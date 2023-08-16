@@ -1,170 +1,118 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, Typography, Button, Grid, Paper, IconButton, Checkbox } from '@material-ui/core';
+import React from 'react';
+import { Container, Typography, Button, Grid, Paper, IconButton, AppBar, Toolbar, Box, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { AppBar, Toolbar } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
-import backgroundImage from '../img/sunrise-g96940d752_1280.jpg'; // Ruta de la imagen local
-
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(8),
     display: 'flex',
+    background: '#1a222d',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundImage: `url(${backgroundImage})`, // Ruta de la imagen de fondo
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    minHeight: '70vh', // Asegura que el fondo cubra toda la pantalla
-    backgroundColor: '#000000', // Asegura que el fondo cubra toda la pantalla
+    minHeight: '100vh',
   },
   habitList: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(6),
   },
   paper: {
     padding: theme.spacing(3),
     margin: '10px 0',
-    backgroundColor: '#d1d0e0', // Color celeste pastel (ajusta según tus preferencias)
-    borderRadius: '10px', // Agregar el borde redondeado al contenedor
-  },
-  title: {
-    fontSize: '2rem',
-    fontWeight: 'bold',
-    marginBottom: theme.spacing(2),
-    color: '#FFFFFF', // Cambiar el color a blanco
+    background: 'rgba(52, 179, 179, 0.2)', // Cambia el color de fondo a transparente verdoso
+    color: '#fff',
+    transition: 'transform 0.2s ease-in-out',
+    '&:hover': {
+      transform: 'translateY(-5px)',
+      boxShadow: '0px 0px 10px rgba(0, 255, 64, 0.8)',
+      border: '2px solid #00ff40',
+    },
   },
   appBar: {
-    zIndex: theme.zIndex.drawer + 1,
+    background: '#34b3b3',
   },
-  spacer: {
-    flex: 1,
-  }
+  toolbar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  habitContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    flexGrow: 1,
+  },
+  gridContainer: {
+    marginTop: theme.spacing(3),
+  },
 }));
 
 function HabitListPage() {
-  const navigate = useNavigate();
   const classes = useStyles();
-  const [habits, setHabits] = useState([]);
-
-  const deleteHabit = (habitId) => {
-    if (window.confirm('¿Estás seguro que deseas eliminar este hábito?')) {
-      fetch(`http://localhost:8000/habitos/${habitId}`, {
-        method: 'DELETE',
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al eliminar el hábito');
-        }
-        setHabits(habits.filter(habit => habit.id_habito !== habitId));
-      })
-      .catch(error => console.error('Hubo un error al eliminar el hábito:', error));
-    }
-  }
-
-  const handleEditHabit = (habit) => {
-    navigate(`/habit/${habit.id_habito}`);
-    sessionStorage.setItem('editHabit', JSON.stringify(habit));
-  }
-
-  useEffect(() => {
-    const userId = sessionStorage.getItem('userId');
-    fetch(`http://localhost:8000/habitos/${userId}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('No se encontraron hábitos para este usuario');
-        }
-        return response.json();
-      })
-      .then(data => setHabits(data))
-      .catch(error => console.error('Hubo un error al obtener los hábitos:', error));
-  }, []);
-
-  const toggleHabitStatus = (habit) => {
-    const newStatus = habit.estado_habito === 'cumplido' ? 'en progreso' : 'cumplido';
-
-    // Construyendo la URL con el parámetro de consulta
-    const url = `http://localhost:8000/habito/${habit.id_habito}/estado?estado=${newStatus}`;
-
-    fetch(url, {
-        method: 'PATCH'
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al actualizar el estado del habito');
-        }
-        return response.json();
-    })
-    .then(updatedhabit => {
-        setHabits(habits.map(t => t.id_habito === updatedhabit.id_habito ? updatedhabit : t));
-    })
-    .catch(error => console.error('Hubo un error al actualizar el estado:', error));
-}
+  // Aquí se supone que los hábitos se obtendrían de tu backend
+  const habits = [
+    {
+      id: 1,
+      name: 'Hábito 1',
+      description: 'Descripción del hábito 1',
+      completed: false,
+    },
+    {
+      id: 2,
+      name: 'Hábito 2',
+      description: 'Descripción del hábito 2',
+      completed: true,
+    },
+  ];
 
   return (
-    <>
-    <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          onClick={() => {
-            navigate(-1); // Vuelve a la página anterior
-          }}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.spacer}></Typography>
-        <Button
-          color="inherit"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            sessionStorage.removeItem('editHabit');
-            navigate('/habit/new');
-          }}
-        >
-          Nuevo Hábito
-        </Button>
-      </Toolbar>
-    </AppBar>
-    <Container component="main" maxWidth="md">
-      <div className={classes.root}>
-        
-        <Typography component="h1" variant="h5" className={classes.title}>
-          Mis Hábitos
-        </Typography>
-
-        {habits.map((habit) => (
-          <Paper key={habit.id_habito} className={classes.paper}>
-            <Grid container justify="space-between" alignItems="center">
-              <Grid item>
-                <Checkbox
-                  checked={habit.estado_habito === 'cumplido'}
-                  onChange={() => toggleHabitStatus(habit)}
-                />
-                <Typography variant="h6">{habit.titulo_habito}</Typography>
-                <Typography variant="body1">{habit.descripcion_habito}</Typography>
-                <Typography variant="body1">{habit.estado_habito}</Typography>
-
-              </Grid>
-              <Grid item>
-                <IconButton aria-label="edit" onClick={() => handleEditHabit(habit)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton aria-label="delete" onClick={() => deleteHabit(habit.id_habito)}>
-                  <DeleteIcon />
-                </IconButton>
-              </Grid>
+    <div className={classes.root}>
+      <Container component="main" className={classes.root}>
+        <AppBar className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+            <Typography variant="h6">Mis Hábitos</Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              className={classes.habitList}
+            >
+              Nuevo Hábito
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Grid container spacing={3} className={classes.gridContainer}>
+          {habits.map((habit) => (
+            <Grid key={habit.id} item xs={12} sm={6} md={4}>
+              <Paper className={classes.paper}>
+                <div className={classes.habitContainer}>
+                  <Checkbox
+                    checked={habit.completed}
+                    // Aquí se gestionaría el cambio de estado del hábito
+                    onChange={() => {}}
+                  />
+                  <Typography variant="h6">{habit.name}</Typography>
+                  <Typography variant="body1">{habit.description}</Typography>
+                  <IconButton aria-label="edit">
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton aria-label="delete">
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
+              </Paper>
             </Grid>
-          </Paper>
-        ))}
-      </div>
-    </Container>
-    </>
+          ))}
+        </Grid>
+      </Container>
+      <Box bgcolor="secondary.main" color="secondary.contrastText" py={3}>
+        <Container maxWidth="md">
+          <Typography align="center" color="inherit" gutterBottom>
+            © 2023 Mi App | Todos los derechos reservados |
+          </Typography>
+        </Container>
+      </Box>
+    </div>
   );
 }
 
