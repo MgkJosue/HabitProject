@@ -84,6 +84,27 @@ function HabitListPage() {
       .catch(error => console.error('Hubo un error al obtener los hábitos:', error));
   }, []);
 
+  const toggleHabitStatus = (habit) => {
+    const newStatus = habit.estado_habito === 'cumplido' ? 'en progreso' : 'cumplido';
+
+    // Construyendo la URL con el parámetro de consulta
+    const url = `http://localhost:8000/habito/${habit.id_habito}/estado?estado=${newStatus}`;
+
+    fetch(url, {
+        method: 'PATCH'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al actualizar el estado del habito');
+        }
+        return response.json();
+    })
+    .then(updatedhabit => {
+        setHabits(habits.map(t => t.id_habito === updatedhabit.id_habito ? updatedhabit : t));
+    })
+    .catch(error => console.error('Hubo un error al actualizar el estado:', error));
+}
+
   return (
     <>
     <AppBar position="fixed" className={classes.appBar}>
@@ -122,8 +143,8 @@ function HabitListPage() {
             <Grid container justify="space-between" alignItems="center">
               <Grid item>
                 <Checkbox
-                  checked={habit.completed}
-                  onChange={() => {}}
+                  checked={habit.estado_habito === 'cumplido'}
+                  onChange={() => toggleHabitStatus(habit)}
                 />
                 <Typography variant="h6">{habit.titulo_habito}</Typography>
                 <Typography variant="body1">{habit.descripcion_habito}</Typography>
