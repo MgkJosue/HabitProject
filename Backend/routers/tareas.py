@@ -44,3 +44,10 @@ def borrar_tarea(id: int, db: Session = Depends(get_db)):
     if db_tarea is None:
         raise HTTPException(status_code=404, detail="Tarea no encontrada")
     return crud.delete_tarea(db=db, id=id)
+
+@router.patch("/tarea/{id}/estado", response_model=schemas.Tarea)
+def actualizar_estado_tarea(id: int, estado: schemas.EstadoTarea, db: Session = Depends(get_db)):
+    db_tarea = crud.get_tarea(db, id)
+    if db_tarea is None:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    return crud.change_tarea_estado(db=db, tarea=db_tarea, estado=estado)

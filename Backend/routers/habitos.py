@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal
 import schemas
-from crud import get_habito, create_habito, get_habitos_by_user_id, update_habito, delete_habito
+from crud import get_habito, create_habito, get_habitos_by_user_id, update_habito, delete_habito, change_habito_estado
 from sqlalchemy.exc import SQLAlchemyError
 from pydantic import ValidationError
 
@@ -66,3 +66,11 @@ def borrar_habito(id_habito: int, db: Session = Depends(get_db)):
     if deleted_habito is None:
         raise HTTPException(status_code=404, detail="Habito no encontrado")
     return deleted_habito
+
+
+@router.patch("/habito/{id}/estado", response_model=schemas.Habito)
+def actualizar_estado_habito(id: int, estado: schemas.EstadoHabito, db: Session = Depends(get_db)):
+    db_habito = get_habito(db, id)
+    if db_habito is None:
+        raise HTTPException(status_code=404, detail="Habito no encontrado")
+    return change_habito_estado(db=db, habito=db_habito, estado=estado)

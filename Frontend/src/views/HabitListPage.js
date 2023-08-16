@@ -127,6 +127,8 @@ function HabitListPage() {
                 />
                 <Typography variant="h6">{habit.titulo_habito}</Typography>
                 <Typography variant="body1">{habit.descripcion_habito}</Typography>
+                <Typography variant="body1">{habit.estado_habito}</Typography>
+
               </Grid>
               <Grid item>
                 <IconButton aria-label="edit" onClick={() => handleEditHabit(habit)}>

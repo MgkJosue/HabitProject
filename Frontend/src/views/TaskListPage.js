@@ -76,6 +76,28 @@ function TaskListPage() {
     }
   }
 
+  const toggleTaskStatus = (task) => {
+    const newStatus = task.estado_tarea === 'completada' ? 'pendiente' : 'completada';
+
+    // Construyendo la URL con el parámetro de consulta
+    const url = `http://localhost:8000/tarea/${task.id_tarea}/estado?estado=${newStatus}`;
+
+    fetch(url, {
+        method: 'PATCH'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al actualizar el estado de la tarea');
+        }
+        return response.json();
+    })
+    .then(updatedTask => {
+        setTasks(tasks.map(t => t.id_tarea === updatedTask.id_tarea ? updatedTask : t));
+    })
+    .catch(error => console.error('Hubo un error al actualizar el estado:', error));
+}
+
+
   const handleEditTask = (task) => {
     navigate(`/task/${task.id_tarea}`);
     sessionStorage.setItem('editTask', JSON.stringify(task));
@@ -135,11 +157,12 @@ function TaskListPage() {
               <Grid container justify="space-between" alignItems="center">
                 <Grid item>
                   <Checkbox
-                    checked={task.estado_tarea === 'completado'} // Esto asume que 'completado' es el estado para una tarea terminada.
-                    onChange={() => {}}
+                      checked={task.estado_tarea === 'completada'}
+                      onChange={() => toggleTaskStatus(task)}
                   />
                   <Typography variant="h6">{task.titulo_tarea}</Typography>
                   <Typography variant="body1">{task.descripcion_tarea}</Typography>
+                  <Typography variant="body1">{task.estado_tarea}</Typography>
                 </Grid>
                 <Grid item>
                 <IconButton aria-label="edit" onClick={() => handleEditTask(task)}>

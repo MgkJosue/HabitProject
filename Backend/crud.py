@@ -118,6 +118,14 @@ def update_tarea(db: Session, tarea: schemas.TareaCreate, id: int):
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+def change_tarea_estado(db: Session, tarea: models.Tarea, estado: schemas.EstadoTarea):
+    try:
+        tarea.estado_tarea = estado.value
+        db.commit()
+        db.refresh(tarea)
+        return tarea
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 def delete_tarea(db: Session, id: int):
@@ -188,7 +196,16 @@ def get_habitos_by_user_id(db: Session, user_id: int):
         return db.query(models.Habito).filter(models.Habito.id_usuario == user_id).all()
     except SQLAlchemyError as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
 
+def change_habito_estado(db: Session, habito: models.Habito, estado: schemas.EstadoHabito):
+    try:
+        habito.estado_habito = estado.value
+        db.commit()
+        db.refresh(habito)
+        return habito
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 #Estos son los crud para progresos
