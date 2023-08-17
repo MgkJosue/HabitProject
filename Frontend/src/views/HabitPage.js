@@ -184,7 +184,7 @@ export default function HabitEditPage() {
           edge="start"
           color="inherit"
           onClick={() => {
-            navigate(-1); // Vuelve a la página anterior
+            navigate('/habit-list'); // Vuelve a la página anterior
           }}
         >
           <ArrowBackIcon />
@@ -199,7 +199,7 @@ export default function HabitEditPage() {
       <Container component="main" maxWidth="xs">
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Typography component="h1" variant="h5" className={classes.title}>
-            Editar Hábito
+            Crear/Editar Hábito
           </Typography>
           {error && <Alert severity="error">{error}</Alert>} 
           <TextField

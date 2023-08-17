@@ -163,7 +163,7 @@ function HabitListPage() {
             edge="start"
             color="inherit"
             onClick={() => {
-              navigate(-1);
+              navigate('/main');
             }}
           >
             <ArrowBackIcon />
