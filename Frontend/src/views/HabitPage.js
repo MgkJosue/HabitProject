@@ -153,7 +153,7 @@ export default function HabitEditPage() {
           navigate('/habit-list');
         })
         .catch(error => console.error('Hubo un error al actualizar el hábito:', error));
-        setError(error.message);
+        setError(error);
       } else if (habitId === 'new') {
       fetch('http://localhost:8000/habitos/', {
         method: 'POST',

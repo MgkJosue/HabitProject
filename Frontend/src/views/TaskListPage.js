@@ -8,6 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(8),
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBar: {
     background: '#34b3b3',
+    height:'9%',
   },
   toolbar: {
     display: 'flex',
@@ -112,14 +114,15 @@ function TaskListPage() {
   }, []);
 
   return (
-    <>
-    <AppBar position="fixed" className={classes.appBar}>
+    <div className={classes.root}>
+      <Container component="main" className={classes.root}>
+        <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
         <IconButton
           edge="start"
           color="inherit"
           onClick={() => {
-            navigate('/main'); // Vuelve a la página anterior
+            navigate(-1); // Vuelve a la página anterior
           }}
         >
           <ArrowBackIcon />
@@ -147,8 +150,8 @@ function TaskListPage() {
 
         <div className={classes.taskContainer}>
           {tasks.length > 0 ? tasks.map((task) => (
-            <Paper key={task.id_tarea} className={classes.paper}>
-              <Grid container justify="space-between" alignItems="center">
+            <Paper key={task.id_tarea} className={classes.paper} item xs={12} sm={6} md={4}>
+              <Grid container  alignItems="center">
                 <Grid item>
                   <Checkbox
                       checked={task.estado_tarea === 'completada'}
@@ -171,7 +174,16 @@ function TaskListPage() {
         </div>
       </div>
     </Container>
-    </>
+      </Container>
+      <Box bgcolor="secondary.main" color="secondary.contrastText" py={3}>
+        <Container maxWidth="md">
+          <Typography align="center" color="inherit" gutterBottom>
+            © 2023 Mi App | Todos los derechos reservados |
+          </Typography>
+        </Container>
+      </Box>
+    </div>
   );
 }
+
 export default TaskListPage;
