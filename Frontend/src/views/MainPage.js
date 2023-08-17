@@ -20,17 +20,13 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     background: '#1a222d',
+    minHeight:'100vh',
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
   },
   title: {
     flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
   },
   menu: {
     marginTop: '50px',
@@ -40,11 +36,11 @@ const useStyles = makeStyles((theme) => ({
   menuItem: {
     color: theme.palette.common.white,
   },
-  pageWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: theme.spacing(2),
-    minHeight: '100vh',
+  paper: {
+    padding: theme.spacing(5),
+    textAlign: 'center',
+    background: `linear-gradient(135deg,#1a222d, #34b3b3 )`, // Cambiar el color de fondo a blanco
+    color: theme.palette.text.secondary,
   },
   sideContainers: {
     display: 'flex',
@@ -52,16 +48,24 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   cont1: {
-    // Estilos específicos para cont1 (lado derecho)
+    background: `linear-gradient(135deg, #34b3b3, #E9AD6A)`,  // Gradiente de colores
+    borderRadius: '0',
+    padding: theme.spacing(5),  // Agregar un poco de espacio dentro de la tarjeta
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '0% 0% 0% 0%',
   },
   cont2: {
-    width: '50%', // Ocupar todo el ancho del viewport
-    height: '690px', // Ocupar todo el alto del viewport
+    width: '50%',  // Ocupa la mitad izquierda de la pantalla
+    display: 'flex',
+    height: '65vh',
     backgroundImage: `url(${backgroundImage})`,
-    backgroundRepeat: 'no-repeat', // Evitar repetición del fondo
-    margin: '10%',
-    borderRadius:"30%",
-    
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'top bottom',  // Alinear a la izquierda y abajo
+    margin: '10% 10% 10% 10%',  // Margen superior cero, margen derecho 10%, margen inferior 10%, margen izquierdo 0
+    borderRadius: '10%',
   },
   footer: {
     marginTop: 'auto',
@@ -69,7 +73,17 @@ const useStyles = makeStyles((theme) => ({
   AppBar: {
     
     backgroundColor: '#34b3b3',
-  }
+  },
+  invisibleGrid: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent', // Fondo transparente
+    border: '2px dashed #333', // Borde punteado oscuro para simular invisibilidad
+    transition: 'background-color 0.3s', // Transición de color de fondo
+    '&:hover': {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Color oscuro cuando se pasa el cursor
+    },
+  },
 }));
 
 export default function MainPage() {
@@ -159,7 +173,7 @@ export default function MainPage() {
           <div className={classes.cont1}>
           <Container maxWidth="md">
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.invisibleGrid}>
               <Paper className={classes.paper}>
                 <Typography variant="h4">
                   Bienvenido a tu Gestor de Hábitos y Tareas, {username}
@@ -169,7 +183,7 @@ export default function MainPage() {
                 </Typography>
               </Paper>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} className={classes.invisibleGrid}>
               <Paper className={classes.paper}>
                 <Typography variant="h5">Tus Tareas</Typography>
                 <Button
@@ -180,105 +194,8 @@ export default function MainPage() {
                   Ver Tareas
                 </Button>
               </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Tareas</Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate('/task-list')}
-                >
-                  Ver Tareas
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Tareas</Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate('/task-list')}
-                >
-                  Ver Tareas
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Tareas</Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate('/task-list')}
-                >
-                  Ver Tareas
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Tareas</Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate('/task-list')}
-                >
-                  Ver Tareas
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Tareas</Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate('/task-list')}
-                >
-                  Ver Tareas
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Tareas</Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => navigate('/task-list')}
-                >
-                  Ver Tareas
-                </Button>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Hábitos</Typography>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => navigate('/habit-list')}
-                >
-                  Ver Hábitos
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
-              <Paper className={classes.paper}>
-                <Typography variant="h5">Tus Hábitos</Typography>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => navigate('/habit-list')}
-                >
-                  Ver Hábitos
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid>         
+            <Grid Grid item xs={12} className={classes.invisibleGrid}>
               <Paper className={classes.paper}>
                 <Typography variant="h5">Tus Hábitos</Typography>
                 <Button

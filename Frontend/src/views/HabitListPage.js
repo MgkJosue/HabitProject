@@ -27,8 +27,15 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     minHeight: "100vh",
   },
+  title: {
+    color: "#00ff40",
+    fontSize: "2.5rem", // Ajusta el tamaño del título
+    marginTop: theme.spacing(1), // Agrega un margen superior
+  },
+  
+  
   habitList: {
-    marginTop: theme.spacing(6),
+    marginTop: theme.spacing(4),
   },
   paper: {
     padding: theme.spacing(3),
@@ -56,7 +63,24 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   gridContainer: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(2),
+  },
+  centerContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "100vh",
+  },
+  footer: {
+    
+    position: 'fixed',  // Fija la posición del footer
+    bottom: 0,          // Lo coloca en la parte inferior
+    width: '100%',      // Ancho completo
+    py: theme.spacing(3),
+  },
+  spacer: {
+    flex: 1,
   },
 }));
 
@@ -132,78 +156,82 @@ function HabitListPage() {
 
   return (
     <>
-      <Container component="main" className={classes.root}>
-        <AppBar position="fixed" className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={() => {
-                navigate(-1); // Vuelve a la página anterior
-              }}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.spacer}></Typography>
-            <Button
-              color="inherit"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                sessionStorage.removeItem("editHabit");
-                navigate("/habit/new");
-              }}
-            >
-              Nuevo Hábito-
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </Container>
-      <Container component="main">
-        <div className={classes.root}>
-          <Typography component="h1" variant="h5" className={classes.title}>
-            Mis Hábitos-
-          </Typography>
 
+<AppBar position="fixed" className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <div className={classes.spacer}></div>
+          <Button
+            color="inherit"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              sessionStorage.removeItem("editHabit");
+              navigate("/habit/new");
+            }}
+          >
+            Nuevo Hábito
+          </Button>
+        </Toolbar>
+      </AppBar>
+      
+      
+        <div className={`${classes.root} ${classes.centerContent}`}>
+        <Typography variant="h3" className={classes.title} style={{ marginLeft: '-150vh' }}>
+          Mis Hábitos
+        </Typography>
+
+        <Grid container  spacing={3}>
           {habits.map((habit) => (
-            <Paper key={habit.id_habito} className={classes.paper}>
-              <Grid container alignItems="center">
-                <Grid item>
-                  <Checkbox
-                    checked={habit.estado_habito === "cumplido"}
-                    onChange={() => toggleHabitStatus(habit)}
-                  />
-                  <Typography variant="h6">{habit.titulo_habito}</Typography>
-                  <Typography variant="body1">
-                    {habit.descripcion_habito}
-                  </Typography>
-                  <Typography variant="body1">{habit.estado_habito}</Typography>
+            <Grid key={habit.id_habito} item xs={6} sm={6} md={4}>
+              <Paper className={classes.paper}>
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <Checkbox
+                      checked={habit.estado_habito === "cumplido"}
+                      onChange={() => toggleHabitStatus(habit)}
+                    />
+                    <Typography variant="h6">{habit.titulo_habito}</Typography>
+                    <Typography variant="body1">
+                      {habit.descripcion_habito}
+                    </Typography>
+                    <Typography variant="body1">{habit.estado_habito}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => handleEditHabit(habit)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => deleteHabit(habit.id_habito)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <IconButton
-                    aria-label="edit"
-                    onClick={() => handleEditHabit(habit)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    aria-label="delete"
-                    onClick={() => deleteHabit(habit.id_habito)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </Paper>
+              </Paper>
+            </Grid>
           ))}
-        </div>
-      </Container>
-      <Box bgcolor="secondary.main" color="secondary.contrastText" py={3}>
-        <Container maxWidth="md">
-          <Typography align="center" color="inherit" gutterBottom>
-            © 2023 Mi App | Todos los derechos reservados |
-          </Typography>
-        </Container>
-      </Box>
+        </Grid>
+      </div>
+      
+      <Box className={classes.footer} py={3}>
+  <Container maxWidth="md">
+    <Typography align="center" color="inherit" gutterBottom>
+      © 2023 Mi App | Todos los derechos reservados |
+    </Typography>
+  </Container>
+</Box>
     </>
   );
 }

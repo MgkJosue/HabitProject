@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Button, Grid, Paper, IconButton, AppBar, Toolbar, Box } from '@material-ui/core';
+import { Container, Typography, Button, Paper, IconButton, AppBar, Toolbar, Box, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -8,23 +8,35 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(8),
     display: 'flex',
-    background: '#1a222d',
     flexDirection: 'column',
     alignItems: 'center',
     minHeight: '100vh',
+    background: '#1a222d',
   },
-  taskList: {
-    marginTop: theme.spacing(6),
+  appBar: {
+    background: '#34b3b3',
+    height: '9%',
+  },
+  title: {
+    color: '#00ff40',
+    fontSize: '2.5rem',
+    marginTop: theme.spacing(8),
+  },
+  addButton: {
+    marginRight: theme.spacing(2),
+  },
+  taskContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: theme.spacing(3),
+    marginTop: theme.spacing(10),
   },
   paper: {
     padding: theme.spacing(3),
-    margin: '10px 0',
-    background: 'rgba(52, 179, 179, 0.2)', // Cambia el color de fondo a transparente verdoso
+    background: 'rgba(52, 179, 179, 0.2)',
     color: '#fff',
     transition: 'transform 0.2s ease-in-out',
     '&:hover': {
@@ -33,22 +45,15 @@ const useStyles = makeStyles((theme) => ({
       border: '2px solid #00ff40',
     },
   },
-  appBar: {
-    background: '#34b3b3',
-    height:'9%',
+  spacer: {
+    flex: 1,
   },
-  toolbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  taskContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    flexGrow: 1,
-  },
-  gridContainer: {
-    marginTop: theme.spacing(3),
+  footer: {
+    
+    position: 'fixed',  // Fija la posición del footer
+    bottom: 0,          // Lo coloca en la parte inferior
+    width: '100%',      // Ancho completo
+    py: theme.spacing(3),
   },
 }));
 
@@ -115,73 +120,80 @@ function TaskListPage() {
 
   return (
     <div className={classes.root}>
-      <Container component="main" className={classes.root}>
-        <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          onClick={() => {
-            navigate(-1); // Vuelve a la página anterior
-          }}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.spacer}></Typography>
-        <Button
-          color="inherit"
-          startIcon={<AddIcon />}
-          className={classes.addButton}
-          onClick={() => {
-            sessionStorage.removeItem('editTask'); // Asegúrate de que no haya datos de edición en el sessionStorage
-            navigate('/task/new'); // Navega hacia "/task/new" para crear una tarea nueva
-          }}
-        >
-          Nueva Tarea
-        </Button>
-      </Toolbar>
-    </AppBar>
-    <Container component="main" maxWidth="md">
-      <div className={classes.root}>
-        <Typography component="h1" variant="h7" className={classes.title}>
+      <AppBar position="fixed" className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.spacer}></Typography>
+          <Button
+            color="inherit"
+            startIcon={<AddIcon />}
+            className={classes.addButton}
+            onClick={() => {
+              sessionStorage.removeItem('editTask');
+              navigate('/task/new');
+            }}
+          >
+            Nueva Tarea
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Container component="main">
+        <Typography variant="h1" className={classes.title}>
           Mis Tareas
         </Typography>
-        
-
         <div className={classes.taskContainer}>
-          {tasks.length > 0 ? tasks.map((task) => (
-            <Paper key={task.id_tarea} className={classes.paper} item xs={12} sm={6} md={4}>
-              <Grid container  alignItems="center">
-                <Grid item>
-                  <Checkbox
+          {tasks.length > 0 ? (
+            tasks.map((task) => (
+              
+              <Paper key={task.id_tarea} className={classes.paper}>
+                
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <Checkbox
                       checked={task.estado_tarea === 'completada'}
                       onChange={() => toggleTaskStatus(task)}
-                  />
-                  <Typography variant="h6">{task.titulo_tarea}</Typography>
-                  <Typography variant="body1">{task.descripcion_tarea}</Typography>
-                  <Typography variant="body1">{task.estado_tarea}</Typography>
+                    />
+                    <Typography variant="h6">{task.titulo_tarea}</Typography>
+                    <Typography variant="body1">{task.descripcion_tarea}</Typography>
+                    <Typography variant="body1">{task.estado_tarea}</Typography>
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      aria-label="edit"
+                      onClick={() => handleEditTask(task)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => deleteTask(task.id_tarea)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                <IconButton aria-label="edit" onClick={() => handleEditTask(task)}>
-                    <EditIcon />
-                </IconButton>
-                  <IconButton aria-label="delete" onClick={() => deleteTask(task.id_tarea)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </Paper> )) : <Typography variant="h6">No existen tareas</Typography>}
+              </Paper>
+            ))
+          ) : (
+            <Typography variant="h6">No existen tareas</Typography>
+          )}
         </div>
-      </div>
-    </Container>
       </Container>
-      <Box bgcolor="secondary.main" color="secondary.contrastText" py={3}>
-        <Container maxWidth="md">
-          <Typography align="center" color="inherit" gutterBottom>
-            © 2023 Mi App | Todos los derechos reservados |
-          </Typography>
-        </Container>
-      </Box>
+      <Box className={classes.footer} py={3}>
+  <Container maxWidth="md">
+    <Typography align="center" color="inherit" gutterBottom>
+      © 2023 Mi App | Todos los derechos reservados |
+    </Typography>
+  </Container>
+</Box>
     </div>
   );
 }
