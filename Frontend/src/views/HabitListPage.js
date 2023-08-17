@@ -117,7 +117,7 @@ return (
         edge="start"
         color="inherit"
         onClick={() => {
-          navigate(-1); // Vuelve a la página anterior
+          navigate('/main'); // Vuelve a la página anterior
         }}
       >
         <ArrowBackIcon />

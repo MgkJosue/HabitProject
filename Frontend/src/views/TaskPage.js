@@ -7,6 +7,7 @@ import backgroundImage3 from '../img/signup.jpg';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppBar, Toolbar } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import Alert from '@material-ui/lab/Alert'; 
 
 
 const images = [backgroundImage1, backgroundImage2, backgroundImage3];
@@ -87,6 +88,7 @@ export default function TaskPage() {
   const classes = useStyles();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { taskId } = useParams();
+  const [error, setError] = useState(null); 
 
   // Añade estado para cada campo del formulario
   const [title, setTitle] = useState('');
@@ -117,6 +119,12 @@ export default function TaskPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+     // Validar que los campos no estén vacíos
+    if (!title || !description || !dueDate) {
+      setError('Todos los campos son obligatorios');
+      return;
+    }
+
 
     const userId = sessionStorage.getItem('userId');
 
@@ -136,11 +144,16 @@ export default function TaskPage() {
       })
         .then(response => {
           if (!response.ok) {
-            throw new Error('Hubo un error al actualizar la tarea.');
+            return response.json().then(data => {
+              throw new Error(data.detail || 'Hubo un error al actualizar la tarea.');
+            });
           }
           navigate('/task-list');
         })
-        .catch(error => console.error('Hubo un error al actualizar la tarea:', error));
+        .catch(error => {
+          console.error('Hubo un error al actualizar la tarea:', error);
+          setError(error.message); // Paso 3: actualizar el estado error
+        });
     } else if (taskId === 'new') {
       // Si estamos en modo creación, creamos una nueva tarea
       fetch('http://localhost:8000/tarea/', {
@@ -150,14 +163,20 @@ export default function TaskPage() {
       })
         .then(response => {
           if (!response.ok) {
-            throw new Error('Hubo un error al crear la tarea.');
+            return response.json().then(data => {
+              throw new Error(data.detail || 'Hubo un error al actualizar la tarea.');
+            });
           }
           navigate('/task-list');
         })
-        .catch(error => console.error('Hubo un error al crear la tarea:', error));
+        .catch(error => {
+          console.error('Hubo un error al crear la tarea:', error);
+          setError(error.message); // Paso 3: actualizar el estado error
+        });
     }
     else {
       console.error('No se especificó un taskId válido.');
+      setError('No se especificó un taskId válido.'); // Paso 3: actualizar el estado error
     }
   };
 
@@ -169,7 +188,7 @@ export default function TaskPage() {
           edge="start"
           color="inherit"
           onClick={() => {
-            navigate(-1); // Vuelve a la página anterior
+            navigate('/task-list'); // Vuelve a la página anterior
           }}
         >
           <ArrowBackIcon />
@@ -186,6 +205,7 @@ export default function TaskPage() {
       <Typography component="h1" variant="h5" className={classes.title}>
         Crear/Editar Tarea
       </Typography>
+      {error && <Alert severity="error">{error}</Alert>} 
       <TextField
         variant="outlined"
         margin="normal"
