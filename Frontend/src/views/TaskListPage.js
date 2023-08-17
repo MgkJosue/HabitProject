@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Button, Grid, Paper, IconButton, AppBar, Toolbar, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Checkbox from '@material-ui/core/Checkbox';
+import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,85 +51,127 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TaskListPage() {
+  const navigate = useNavigate();
   const classes = useStyles();
-  // Aquí se supone que las tareas se obtendrían de tu backend
-  const tasks = [
-    {
-      id: 1,
-      title: 'Tarea 1',
-      description: 'Descripción de la tarea 1',
-      completed: false,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    {
-      id: 1,
-      title: 'Tarea 1',
-      description: 'Descripción de la tarea 1',
-      completed: false,
-    },
-    {
-      id: 2,
-      title: 'Tarea 2',
-      description: 'Descripción de la tarea 2',
-      completed: true,
-    },
-    
-  ];
+  const [tasks, setTasks] = useState([]);
+  const deleteTask = (taskId) => {
+    if(window.confirm('¿Estás seguro que deseas eliminar esta tarea?')) {
+      fetch(`http://localhost:8000/tarea/${taskId}`, {
+        method: 'DELETE',
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error al eliminar la tarea');
+        }
+        // Actualiza la lista de tareas en el estado del componente
+        setTasks(tasks.filter(task => task.id_tarea !== taskId));
+      })
+      .catch(error => console.error('Hubo un error al eliminar la tarea:', error));
+    }
+  }
 
-  return (
-    <div className={classes.root}>
-      <Container component="main" className={classes.root}>
-        <AppBar className={classes.appBar}>
-          <Toolbar className={classes.toolbar}>
-            <Typography variant="h6">Mis Tareas</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddIcon />}
-              className={classes.taskList}
-            >
-              Nueva Tarea
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <Grid container spacing={3} className={classes.gridContainer}>
-          {tasks.map((task) => (
-            <Grid key={task.id} item xs={12} sm={6} md={4}>
-              <Paper className={classes.paper}>
-                <div className={classes.taskContainer}>
-                  <Checkbox
-                    checked={task.completed}
-                    // Aquí se gestionaría el cambio de estado de la tarea
-                    onChange={() => {}}
-                  />
-                  <Typography variant="h6">{task.title}</Typography>
-                  <Typography variant="body1">{task.description}</Typography>
-                  <IconButton aria-label="edit">
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton aria-label="delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </div>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-      <Box bgcolor="secondary.main" color="secondary.contrastText" py={3}>
-        <Container maxWidth="md">
-          <Typography align="center" color="inherit" gutterBottom>
-            © 2023 Mi App | Todos los derechos reservados |
-          </Typography>
-        </Container>
-      </Box>
-    </div>
-  );
+  const toggleTaskStatus = (task) => {
+    const newStatus = task.estado_tarea === 'completada' ? 'pendiente' : 'completada';
+
+    // Construyendo la URL con el parámetro de consulta
+    const url = `http://localhost:8000/tarea/${task.id_tarea}/estado?estado=${newStatus}`;
+
+    fetch(url, {
+        method: 'PATCH'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al actualizar el estado de la tarea');
+        }
+        return response.json();
+    })
+    .then(updatedTask => {
+        setTasks(tasks.map(t => t.id_tarea === updatedTask.id_tarea ? updatedTask : t));
+    })
+    .catch(error => console.error('Hubo un error al actualizar el estado:', error));
 }
 
+
+  const handleEditTask = (task) => {
+    navigate(`/task/${task.id_tarea}`);
+    sessionStorage.setItem('editTask', JSON.stringify(task));
+}
+
+  
+  useEffect(() => {
+    const userId = sessionStorage.getItem('userId');
+    fetch(`http://localhost:8000/tareas/${userId}`) // Cambia la URL si es necesario
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se encontraron tareas para este usuario');
+        }
+        return response.json();
+      })
+      .then(data => setTasks(data))
+      .catch(error => console.error('Hubo un error al obtener las tareas:', error));
+  }, []);
+
+  return (
+    <>
+    <AppBar position="fixed" className={classes.appBar}>
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={() => {
+            navigate(-1); // Vuelve a la página anterior
+          }}
+        >
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography variant="h6" className={classes.spacer}></Typography>
+        <Button
+          color="inherit"
+          startIcon={<AddIcon />}
+          className={classes.addButton}
+          onClick={() => {
+            sessionStorage.removeItem('editTask'); // Asegúrate de que no haya datos de edición en el sessionStorage
+            navigate('/task/new'); // Navega hacia "/task/new" para crear una tarea nueva
+          }}
+        >
+          Nueva Tarea
+        </Button>
+      </Toolbar>
+    </AppBar>
+    <Container component="main" maxWidth="md">
+      <div className={classes.root}>
+        <Typography component="h1" variant="h7" className={classes.title}>
+          Mis Tareas
+        </Typography>
+        
+
+        <div className={classes.taskContainer}>
+          {tasks.length > 0 ? tasks.map((task) => (
+            <Paper key={task.id_tarea} className={classes.paper}>
+              <Grid container justify="space-between" alignItems="center">
+                <Grid item>
+                  <Checkbox
+                      checked={task.estado_tarea === 'completada'}
+                      onChange={() => toggleTaskStatus(task)}
+                  />
+                  <Typography variant="h6">{task.titulo_tarea}</Typography>
+                  <Typography variant="body1">{task.descripcion_tarea}</Typography>
+                  <Typography variant="body1">{task.estado_tarea}</Typography>
+                </Grid>
+                <Grid item>
+                <IconButton aria-label="edit" onClick={() => handleEditTask(task)}>
+                    <EditIcon />
+                </IconButton>
+                  <IconButton aria-label="delete" onClick={() => deleteTask(task.id_tarea)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Paper> )) : <Typography variant="h6">No existen tareas</Typography>}
+        </div>
+      </div>
+    </Container>
+    </>
+  );
+}
 export default TaskListPage;
