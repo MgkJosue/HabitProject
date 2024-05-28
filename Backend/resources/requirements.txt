@@ -6,3 +6,4 @@ uvicorn
 passlib[bcrypt] 
 python-jose[cryptography]
 pytz
+psycopg2-binary
