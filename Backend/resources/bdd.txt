@@ -1,48 +1,43 @@
-CREATE DATABASE IF NOT EXISTS AplicacionHabitos;
+AplicacionHabitos
+BDD POSTGRESQL
 
-USE AplicacionHabitos;
-
-CREATE TABLE Usuarios(
-    id_usuario INT AUTO_INCREMENT,
+-- Crear la tabla Usuarios
+CREATE TABLE Usuarios (
+    id_usuario SERIAL PRIMARY KEY,
     nombre_usuario VARCHAR(50) UNIQUE,
-    correo VARCHAR(100) UNIQUE,
+    correo VARCHAR(100) UANIQUE,
     contrasena_hash VARCHAR(255),
-    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-    fecha_ultima_modificacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY(id_usuario)
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_ultima_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Tareas(
-    id_tarea INT AUTO_INCREMENT,
-    id_usuario INT,
+-- Crear la tabla Tareas
+CREATE TABLE Tareas (
+    id_tarea SERIAL PRIMARY KEY,
+    id_usuario INT REFERENCES Usuarios(id_usuario),
     titulo_tarea VARCHAR(100),
     descripcion_tarea TEXT,
-    fecha_creacion_tarea DATETIME DEFAULT CURRENT_TIMESTAMP,
-    fecha_vencimiento_tarea DATETIME,
-    fecha_completado_tarea DATETIME,
-    estado_tarea ENUM('completada', 'pendiente', 'vencida') DEFAULT 'pendiente',
-    PRIMARY KEY(id_tarea),
-    FOREIGN KEY(id_usuario) REFERENCES Usuarios(id_usuario)
+    fecha_creacion_tarea TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_vencimiento_tarea TIMESTAMP,
+    fecha_completado_tarea TIMESTAMP,
+    estado_tarea VARCHAR(10) CHECK (estado_tarea IN ('completada', 'pendiente', 'vencida')) DEFAULT 'pendiente'
 );
 
-CREATE TABLE Habitos(
-    id_habito INT AUTO_INCREMENT,
-    id_usuario INT,
+-- Crear la tabla Habitos
+CREATE TABLE Habitos (
+    id_habito SERIAL PRIMARY KEY,
+    id_usuario INT REFERENCES Usuarios(id_usuario),
     titulo_habito VARCHAR(100),
     descripcion_habito TEXT,
-    fecha_creacion_habito DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado_habito ENUM('en progreso', 'cumplido') DEFAULT 'en progreso',
-    PRIMARY KEY(id_habito),
-    FOREIGN KEY(id_usuario) REFERENCES Usuarios(id_usuario)
+    fecha_creacion_habito TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado_habito VARCHAR(11) CHECK (estado_habito IN ('en progreso', 'cumplido')) DEFAULT 'en progreso'
 );
 
-CREATE TABLE Progreso(
-    id_progreso INT AUTO_INCREMENT,
-    id_tarea INT,
-    id_habito INT,
-    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado ENUM('completado', 'en progreso') DEFAULT 'en progreso',
-    PRIMARY KEY(id_progreso),
-    FOREIGN KEY(id_tarea) REFERENCES Tareas(id_tarea),
-    FOREIGN KEY(id_habito) REFERENCES Habitos(id_habito)
+-- Crear la tabla Progreso
+CREATE TABLE Progreso (
+    id_progreso SERIAL PRIMARY KEY,
+    id_tarea INT REFERENCES Tareas(id_tarea),
+    id_habito INT REFERENCES Habitos(id_habito),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado VARCHAR(11) CHECK (estado IN ('completado', 'en progreso')) DEFAULT 'en progreso'
 );
