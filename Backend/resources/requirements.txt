@@ -1,9 +1,8 @@
 fastapi
 sqlalchemy
 pydantic
-mysql-connector-python
 uvicorn
 passlib[bcrypt] 
-python-jose[cryptography]
+python-jose[acryptography]
 pytz
 psycopg2-binary
