@@ -1,11 +1,8 @@
-AplicacionHabitos
-BDD POSTGRESQL
-
 -- Crear la tabla Usuarios
 CREATE TABLE Usuarios (
     id_usuario SERIAL PRIMARY KEY,
     nombre_usuario VARCHAR(50) UNIQUE,
-    correo VARCHAR(100) UANIQUE,
+    correo VARCHAR(100) UNIQUE,
     contrasena_hash VARCHAR(255),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_ultima_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
