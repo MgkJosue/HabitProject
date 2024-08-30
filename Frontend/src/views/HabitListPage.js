@@ -13,44 +13,40 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(8),
     display: "flex",
-    background: "#1a222d",
     flexDirection: "column",
     alignItems: "center",
     minHeight: "100vh",
+    backgroundColor: "#121212", // Fondo oscuro
   },
   title: {
-    color: "#00ff40",
-    fontSize: "2.5rem", // Ajusta el tamaño del título
-    marginTop: theme.spacing(1), // Agrega un margen superior
+    color: "#ffffff", // Título en blanco
+    fontSize: "2.5rem",
+    fontFamily: "'Roboto', sans-serif",
+    marginTop: theme.spacing(3),
   },
-  
-  
   habitList: {
     marginTop: theme.spacing(4),
   },
   paper: {
     padding: theme.spacing(3),
     margin: "10px 0",
-    background: "rgba(52, 179, 179, 0.2)", // Cambia el color de fondo a transparente verdoso
-    color: "#fff",
-    transition: "transform 0.2s ease-in-out",
-    "&:hover": {
-      transform: "translateY(-5px)",
-      boxShadow: "0px 0px 10px rgba(0, 255, 64, 0.8)",
-      border: "2px solid #00ff40",
-    },
+    background: "#263238", // Fondo de tarjeta oscuro
+    color: "#ffffff",
+    borderRadius: "8px", // Bordes redondeados
+    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.3)", // Sombra
+    border: "1px solid #00695c", // Borde similar al borde de la imagen
   },
   appBar: {
-    background: "#34b3b3",
+    background: "#00695c", // Fondo verde para la barra superior
   },
   toolbar: {
     display: "flex",
@@ -73,11 +69,13 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "100vh",
   },
   footer: {
-    
-    position: 'fixed',  // Fija la posición del footer
-    bottom: 0,          // Lo coloca en la parte inferior
-    width: '100%',      // Ancho completo
-    py: theme.spacing(3),
+    position: "fixed",
+    bottom: 0,
+    width: "100%",
+    background: "#263238", // Fondo del footer oscuro
+    color: "#ffffff", // Texto en blanco
+    padding: theme.spacing(2),
+    textAlign: "center",
   },
   spacer: {
     flex: 1,
@@ -88,28 +86,6 @@ function HabitListPage() {
   const navigate = useNavigate();
   const classes = useStyles();
   const [habits, setHabits] = useState([]);
-
-  const deleteHabit = (habitId) => {
-    if (window.confirm("¿Estás seguro que deseas eliminar este hábito?")) {
-      fetch(`http://localhost:8000/habitos/${habitId}`, {
-        method: "DELETE",
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error al eliminar el hábito");
-          }
-          setHabits(habits.filter((habit) => habit.id_habito !== habitId));
-        })
-        .catch((error) =>
-          console.error("Hubo un error al eliminar el hábito:", error)
-        );
-    }
-  };
-
-  const handleEditHabit = (habit) => {
-    navigate(`/habit/${habit.id_habito}`);
-    sessionStorage.setItem("editHabit", JSON.stringify(habit));
-  };
 
   useEffect(() => {
     const userId = sessionStorage.getItem("userId");
@@ -129,8 +105,6 @@ function HabitListPage() {
   const toggleHabitStatus = (habit) => {
     const newStatus =
       habit.estado_habito === "cumplido" ? "en progreso" : "cumplido";
-
-    // Construyendo la URL con el parámetro de consulta
     const url = `http://localhost:8000/habito/${habit.id_habito}/estado?estado=${newStatus}`;
 
     fetch(url, {
@@ -138,14 +112,14 @@ function HabitListPage() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Error al actualizar el estado del habito");
+          throw new Error("Error al actualizar el estado del hábito");
         }
         return response.json();
       })
-      .then((updatedhabit) => {
+      .then((updatedHabit) => {
         setHabits(
           habits.map((t) =>
-            t.id_habito === updatedhabit.id_habito ? updatedhabit : t
+            t.id_habito === updatedHabit.id_habito ? updatedHabit : t
           )
         );
       })
@@ -154,17 +128,31 @@ function HabitListPage() {
       );
   };
 
+  const deleteHabit = (habitId) => {
+    if (window.confirm("¿Estás seguro que deseas eliminar este hábito?")) {
+      fetch(`http://localhost:8000/habitos/${habitId}`, {
+        method: "DELETE",
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error al eliminar el hábito");
+          }
+          setHabits(habits.filter((habit) => habit.id_habito !== habitId));
+        })
+        .catch((error) =>
+          console.error("Hubo un error al eliminar el hábito:", error)
+        );
+    }
+  };
+
   return (
     <>
-
-<AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
             edge="start"
             color="inherit"
-            onClick={() => {
-              navigate('/main');
-            }}
+            onClick={() => navigate("/main")}
           >
             <ArrowBackIcon />
           </IconButton>
@@ -177,43 +165,48 @@ function HabitListPage() {
               navigate("/habit/new");
             }}
           >
-            Nuevo Hábito
+            Nueva Tarea
           </Button>
         </Toolbar>
       </AppBar>
-      
-      
-        <div className={`${classes.root} ${classes.centerContent}`}>
-        <Typography variant="h3" className={classes.title} style={{ marginLeft: '-150vh' }}>
-          Mis Hábitos
+
+      <div className={`${classes.root} ${classes.centerContent}`}>
+        <Typography variant="h3" className={classes.title}>
+          Mis Tareas
         </Typography>
 
-        <Grid container  spacing={3}>
+        <Grid container spacing={3} className={classes.gridContainer}>
           {habits.map((habit) => (
-            <Grid key={habit.id_habito} item xs={6} sm={6} md={4}>
+            <Grid key={habit.id_habito} item xs={12} sm={6} md={4}>
               <Paper className={classes.paper}>
                 <Grid container alignItems="center">
-                  <Grid item>
+                  <Grid item xs>
                     <Checkbox
                       checked={habit.estado_habito === "cumplido"}
                       onChange={() => toggleHabitStatus(habit)}
                     />
-                    <Typography variant="h6">{habit.titulo_habito}</Typography>
-                    <Typography variant="body1">
+                    <Typography variant="h6" style={{ color: "#ffffff" }}>
+                      {habit.titulo_habito}
+                    </Typography>
+                    <Typography variant="body2" style={{ color: "#b0bec5" }}>
                       {habit.descripcion_habito}
                     </Typography>
-                    <Typography variant="body1">{habit.estado_habito}</Typography>
+                    <Typography variant="body2" style={{ color: "#b0bec5" }}>
+                      {habit.estado_habito}
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <IconButton
                       aria-label="edit"
-                      onClick={() => handleEditHabit(habit)}
+                      onClick={() => navigate(`/habit/${habit.id_habito}`)}
+                      style={{ color: "#ffffff" }}
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
                       aria-label="delete"
                       onClick={() => deleteHabit(habit.id_habito)}
+                      style={{ color: "#ffffff" }}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -224,15 +217,14 @@ function HabitListPage() {
           ))}
         </Grid>
       </div>
-      
-      <Box className={classes.footer} py={3}>
-  <Container maxWidth="md">
-    <Typography align="center" color="inherit" gutterBottom>
-      © 2023 Mi App | Todos los derechos reservados |
-    </Typography>
-  </Container>
-</Box>
+
+      <Box className={classes.footer}>
+        <Typography variant="body2">
+          © 2023 Mi App | Todos los derechos reservados |
+        </Typography>
+      </Box>
     </>
   );
 }
+
 export default HabitListPage;

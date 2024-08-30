@@ -5,7 +5,7 @@ import React, { useState } from 'react'; // Importa useState
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import Alert from '@material-ui/lab/Alert'; // Importa Alert para most
 
-import backgroundImage from '../img/signup.jpg'; // Import your image here
+import backgroundImage from '../img/fondo4.jpg'; // Import your image here
 
 const useStyles = makeStyles((theme) => ({
   root: {

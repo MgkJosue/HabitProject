@@ -14,46 +14,54 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     minHeight: '100vh',
-    background: '#1a222d',
+    background: '#121212',
   },
   appBar: {
-    background: '#34b3b3',
+    background: '#009688',
     height: '9%',
   },
   title: {
-    color: '#00ff40',
+    color: '#FFFFFF',
     fontSize: '2.5rem',
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(10),
   },
   addButton: {
     marginRight: theme.spacing(2),
+    color: '#FFFFFF',
   },
   taskContainer: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
     gap: theme.spacing(3),
-    marginTop: theme.spacing(10),
+    marginTop: theme.spacing(5),
   },
   paper: {
     padding: theme.spacing(3),
-    background: 'rgba(52, 179, 179, 0.2)',
-    color: '#fff',
+    background: '#263238',
+    color: '#FFFFFF',
+    borderRadius: '8px',
     transition: 'transform 0.2s ease-in-out',
     '&:hover': {
       transform: 'translateY(-5px)',
-      boxShadow: '0px 0px 10px rgba(0, 255, 64, 0.8)',
-      border: '2px solid #00ff40',
+      boxShadow: '0px 4px 20px rgba(0, 150, 136, 0.8)',
+    },
+  },
+  iconButton: {
+    color: '#FFFFFF',
+    '&:hover': {
+      color: '#009688',
     },
   },
   spacer: {
     flex: 1,
   },
   footer: {
-    
-    position: 'fixed',  // Fija la posición del footer
-    bottom: 0,          // Lo coloca en la parte inferior
-    width: '100%',      // Ancho completo
-    py: theme.spacing(3),
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+    background: '#263238',
+    padding: theme.spacing(2, 0),
+    color: '#FFFFFF',
   },
 }));
 
@@ -61,53 +69,49 @@ function TaskListPage() {
   const navigate = useNavigate();
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
+
   const deleteTask = (taskId) => {
-    if(window.confirm('¿Estás seguro que deseas eliminar esta tarea?')) {
+    if (window.confirm('¿Estás seguro que deseas eliminar esta tarea?')) {
       fetch(`http://localhost:8000/tarea/${taskId}`, {
         method: 'DELETE',
       })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al eliminar la tarea');
-        }
-        // Actualiza la lista de tareas en el estado del componente
-        setTasks(tasks.filter(task => task.id_tarea !== taskId));
-      })
-      .catch(error => console.error('Hubo un error al eliminar la tarea:', error));
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error al eliminar la tarea');
+          }
+          setTasks(tasks.filter(task => task.id_tarea !== taskId));
+        })
+        .catch(error => console.error('Hubo un error al eliminar la tarea:', error));
     }
   }
 
   const toggleTaskStatus = (task) => {
     const newStatus = task.estado_tarea === 'completada' ? 'pendiente' : 'completada';
-
-    // Construyendo la URL con el parámetro de consulta
     const url = `http://localhost:8000/tarea/${task.id_tarea}/estado?estado=${newStatus}`;
 
     fetch(url, {
-        method: 'PATCH'
+      method: 'PATCH'
     })
-    .then(response => {
+      .then(response => {
         if (!response.ok) {
-            throw new Error('Error al actualizar el estado de la tarea');
+          throw new Error('Error al actualizar el estado de la tarea');
         }
         return response.json();
-    })
-    .then(updatedTask => {
+      })
+      .then(updatedTask => {
         setTasks(tasks.map(t => t.id_tarea === updatedTask.id_tarea ? updatedTask : t));
-    })
-    .catch(error => console.error('Hubo un error al actualizar el estado:', error));
-}
-
+      })
+      .catch(error => console.error('Hubo un error al actualizar el estado:', error));
+  }
 
   const handleEditTask = (task) => {
     navigate(`/task/${task.id_tarea}`);
     sessionStorage.setItem('editTask', JSON.stringify(task));
-}
+  }
 
-  
   useEffect(() => {
     const userId = sessionStorage.getItem('userId');
-    fetch(`http://localhost:8000/tareas/${userId}`) // Cambia la URL si es necesario
+    fetch(`http://localhost:8000/tareas/${userId}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('No se encontraron tareas para este usuario');
@@ -125,9 +129,7 @@ function TaskListPage() {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={() => {
-              navigate('/main');
-            }}
+            onClick={() => navigate('/main')}
           >
             <ArrowBackIcon />
           </IconButton>
@@ -152,29 +154,30 @@ function TaskListPage() {
         <div className={classes.taskContainer}>
           {tasks.length > 0 ? (
             tasks.map((task) => (
-              
               <Paper key={task.id_tarea} className={classes.paper}>
-                
-                <Grid container alignItems="center">
+                <Grid container alignItems="center" justifyContent="space-between">
                   <Grid item>
                     <Checkbox
                       checked={task.estado_tarea === 'completada'}
                       onChange={() => toggleTaskStatus(task)}
+                      color="primary"
                     />
                     <Typography variant="h6">{task.titulo_tarea}</Typography>
-                    <Typography variant="body1">{task.descripcion_tarea}</Typography>
-                    <Typography variant="body1">{task.estado_tarea}</Typography>
+                    <Typography variant="body2">{task.descripcion_tarea}</Typography>
+                    <Typography variant="caption">{task.estado_tarea}</Typography>
                   </Grid>
                   <Grid item>
                     <IconButton
                       aria-label="edit"
                       onClick={() => handleEditTask(task)}
+                      className={classes.iconButton}
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
                       aria-label="delete"
                       onClick={() => deleteTask(task.id_tarea)}
+                      className={classes.iconButton}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -187,13 +190,13 @@ function TaskListPage() {
           )}
         </div>
       </Container>
-      <Box className={classes.footer} py={3}>
-  <Container maxWidth="md">
-    <Typography align="center" color="inherit" gutterBottom>
-      © 2023 Mi App | Todos los derechos reservados |
-    </Typography>
-  </Container>
-</Box>
+      <Box className={classes.footer}>
+        <Container maxWidth="md">
+          <Typography align="center" color="inherit" gutterBottom>
+            © 2023 Mi App | Todos los derechos reservados |
+          </Typography>
+        </Container>
+      </Box>
     </div>
   );
 }

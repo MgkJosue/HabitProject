@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
@@ -13,18 +12,16 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import backgroundImage from '../img/logui1.jpg'; // Import your image here
-
+import backgroundImage from '../img/fondo3.jpg'; // Import your image here
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // Adjustments to cover the whole screen
     position: 'fixed',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundImage: `url(${backgroundImage})`, // Set the background image here
+    backgroundImage: `url(${backgroundImage})`, 
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     display: 'flex',
@@ -33,37 +30,39 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   overlay: {
-    // Styles for the overlay box
     position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Adjust the opacity and color as needed
+    backgroundColor: 'rgba(255, 255, 255, 0.1)', 
   },
   form: {
-    position: 'relative', // Add relative positioning to contain the overlay
-    zIndex: 1, // Ensure the form is on top of the overlay
+    position: 'relative', 
+    zIndex: 1, 
     width: '100%',
     marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center', // Center horizontally
-    animation: '$fadeIn 1s', // Apply the fadeIn animation to the form
+    alignItems: 'center', 
+    animation: '$fadeIn 1s', 
   },
   title: {
-    fontSize: '1.8rem', // Adjust the font size as needed
-    fontWeight: 'bold', // Add bold font weight if desired
-    marginBottom: theme.spacing(2), // Add margin at the bottom for spacing
+    fontSize: '1.8rem',
+    fontWeight: 'bold',
+    marginBottom: theme.spacing(2),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  // Keyframe animation definition
+  link: {
+    color: 'black', // Cambia el color del enlace a negro
+    textDecoration: 'none', // Opcional: eliminar el subrayado
+  },
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
-      transform: 'translateY(20px)', // You can adjust the value to control the appearance direction
+      transform: 'translateY(20px)',
     },
     to: {
       opacity: 1,
@@ -71,8 +70,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-
 
 export default function LoginPage() {
   const classes = useStyles();
@@ -84,7 +81,6 @@ export default function LoginPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    // Validar que los campos no estén vacíos
     if (username === '' || password === '') {
       setError('Todos los campos son obligatorios');
       return;
@@ -105,19 +101,18 @@ export default function LoginPage() {
   
     if (response.ok) {
       console.log("Token: ", data.access_token);
-      sessionStorage.setItem('userId', data.user_id); // Guarda el id del usuario
-      sessionStorage.setItem('token', data.access_token); // Guarda el token en sessionStorage
+      sessionStorage.setItem('userId', data.user_id); 
+      sessionStorage.setItem('token', data.access_token); 
       navigate('/main'); 
     } else {
       console.log("Error: ", data);
-      setError(data.detail || 'Ocurrió un error');  // Modificado para manejar el error de respuesta
+      setError(data.detail || 'Ocurrió un error');
     }
-    
-  }
+  };
   
   return (
     <div className={classes.root}>
-    <div className={classes.overlay}></div>
+      <div className={classes.overlay}></div>
       <Container component="main" maxWidth="xs">
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Typography component="h1" variant="h5" className={classes.title}>
@@ -163,7 +158,7 @@ export default function LoginPage() {
 
           <Grid container>
             <Grid item>
-              <Link to="/signup" >
+              <Link to="/signup" className={classes.link}>
                 ¿No tienes una cuenta? Crea una!
               </Link>
             </Grid>
