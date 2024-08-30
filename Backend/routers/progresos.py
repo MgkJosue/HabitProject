@@ -5,6 +5,8 @@ from database import SessionLocal
 import schemas
 from crud import get_progreso, create_progreso, get_progreso_by_id, update_progreso, delete_progreso
 
+
+#so
 router = APIRouter()
 
 def get_db():

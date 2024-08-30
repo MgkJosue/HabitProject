@@ -7,7 +7,7 @@ from datetime import datetime
 from schemas import EstadoTarea, EstadoHabito
 from passlib.context import CryptContext
 
-#Estos son los crud para usuarios 
+#Estos son los crud para usuario
 def get_user_by_email(db: Session, correo: str):
     try:
         return db.query(models.Usuario).filter(models.Usuario.correo == correo).first()
