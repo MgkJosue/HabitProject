@@ -11,7 +11,7 @@ from database import SessionLocal
 
 router = APIRouter()
 
-# Dependency
+# Dependenc
 def get_db():
     db = SessionLocal()
     try:

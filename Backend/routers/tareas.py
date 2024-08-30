@@ -8,7 +8,7 @@ import pytz
 
 router = APIRouter()
 
-# Dependency
+# Dependenc
 def get_db():
     db = SessionLocal()
     try:

@@ -2,7 +2,7 @@ from jose import jwt
 from datetime import datetime, timedelta
 from crud import *
 
-SECRET_KEY = "your-secret-key"  # TODO: Store this securely, e.g. in an environment variable
+SECRET_KEY = "your-secret-key"  #TODO: Store this securely, e.g. in an environment variable
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

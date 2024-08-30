@@ -8,7 +8,7 @@ from routers.progresos import router as progresos_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
+#si
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Permite solicitudes de todos los orígenes
