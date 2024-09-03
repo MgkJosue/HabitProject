@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import backgroundImage from '../img/profile.jpg'; // Import your image here
+import backgroundImage from '../img/fondo3.jpg'; // Import your image here
 
 const useStyles = makeStyles((theme) => ({
   root: {

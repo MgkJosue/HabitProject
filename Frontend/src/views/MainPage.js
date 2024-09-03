@@ -8,7 +8,6 @@ import {
   IconButton,
   Grid,
   Paper,
-  Container,
   Menu,
   MenuItem,
 } from '@material-ui/core';
@@ -18,11 +17,11 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: '#f4f5f7',  // Fondo más claro
+    backgroundColor: '#f4f5f7',
     minHeight: '100vh',
   },
   appBar: {
-    backgroundColor: '#3f51b5',  // Azul más oscuro para la AppBar
+    backgroundColor: '#3f51b5',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -36,12 +35,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     height: '80vh',
+    marginTop: theme.spacing(12), // Ajuste para bajar el contenido
   },
   card: {
     padding: theme.spacing(4),
-    backgroundColor: '#fff',  // Fondo blanco para las tarjetas
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',  // Sombra suave
-    borderRadius: '12px',  // Bordes redondeados
+    backgroundColor: '#fff',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+    borderRadius: '12px',
     textAlign: 'center',
     width: '100%',
   },
@@ -135,6 +135,11 @@ export default function MainPage() {
               >
                 Ver Tareas
               </Button>
+              <img
+                src={require('../img/Login12.jpeg')}
+                alt="Imagen Tareas"
+                style={{ marginTop: '20px', width: '100%', borderRadius: '8px' }}
+              />
             </Paper>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -148,6 +153,11 @@ export default function MainPage() {
               >
                 Ver Hábitos
               </Button>
+              <img
+                src={require('../img/Habito.jpeg')}
+                alt="Imagen Habitos"
+                style={{ marginTop: '20px', width: '100%', borderRadius: '4px' }}
+              />
             </Paper>
           </Grid>
         </Grid>

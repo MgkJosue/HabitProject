@@ -14,14 +14,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     minHeight: '100vh',
-    background: '#121212',
+    background: 'write',
   },
   appBar: {
     background: '#009688',
     height: '9%',
   },
   title: {
-    color: '#FFFFFF',
+    color: 'black',
     fontSize: '2.5rem',
     marginTop: theme.spacing(10),
   },

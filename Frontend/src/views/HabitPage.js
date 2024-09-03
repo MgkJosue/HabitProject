@@ -5,12 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AppBar, Toolbar } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import backgroundImage1 from '../img/logui1.jpg';
-import backgroundImage2 from '../img/profile.jpg';
-import backgroundImage3 from '../img/signup.jpg';
+import backgroundImage1 from '../img/fondo3.jpg';
+//import backgroundImage2 from '../img/profile.jpg';
+//import backgroundImage3 from '../img/signup.jpg';
 import Alert from '@material-ui/lab/Alert'; 
 
-const images = [backgroundImage1, backgroundImage2, backgroundImage3];
+const images = [backgroundImage1];
 
 const useStyles = makeStyles((theme) => ({
   root: {

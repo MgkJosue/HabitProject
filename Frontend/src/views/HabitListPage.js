@@ -25,16 +25,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     minHeight: "100vh",
-    backgroundColor: "#121212", // Fondo oscuro
+    backgroundColor: "#f5f5f5", // Fondo claro
   },
   title: {
-    color: "#ffffff", // Título en blanco
+    color: "black", // Título en negro
     fontSize: "2.5rem",
     fontFamily: "'Roboto', sans-serif",
-    marginTop: theme.spacing(3),
-  },
-  habitList: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(10),
   },
   paper: {
     padding: theme.spacing(3),
@@ -52,21 +49,16 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
-  habitContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    flexGrow: 1,
-  },
   gridContainer: {
-    marginTop: theme.spacing(2),
+    width: "100%",
+    padding: theme.spacing(2),
   },
   centerContent: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    minHeight: "100vh",
+    flexGrow: 1,
   },
   footer: {
     position: "fixed",
@@ -165,14 +157,14 @@ function HabitListPage() {
               navigate("/habit/new");
             }}
           >
-            Nueva Tarea
+            Nuevo Hábito
           </Button>
         </Toolbar>
       </AppBar>
 
-      <div className={`${classes.root} ${classes.centerContent}`}>
+      <div className={classes.root}>
         <Typography variant="h3" className={classes.title}>
-          Mis Tareas
+          Mis Hábitos
         </Typography>
 
         <Grid container spacing={3} className={classes.gridContainer}>

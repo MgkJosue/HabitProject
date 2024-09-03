@@ -16,14 +16,14 @@ import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 // Importar la imagen local
-import backgroundImage from '../img/gif1.gif';
+import backgroundImage from '../img/Dispersion-con-regresion.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: '100vh', // Ajustar el contenedor principal al 100% del alto de la pantalla
+    height: '100vh',
     display: 'flex',
-    flexDirection: 'column', // Alinear los elementos en columna
+    flexDirection: 'column',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -40,26 +40,31 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '100%', // Agrega bordes redondeados al contenedor
+    borderRadius: '100%',
     overflow: 'hidden',
-    height: '100%', // Para que la imagen no se salga de los bordes redondeados
-    flex: 1, // Ocupar todo el espacio vertical disponible
+    height: '100%',
+    flex: 1,
   },
   image: {
-    width: '80%', // Ajustar el ancho de la imagen al 100% del contenedor
-    height: 'auto', // Ajustar la altura de la imagen automáticamente
+    width: '80%',
+    height: 'auto',
   },
   chartContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%', // El gráfico ocupará toda la altura del contenedor
-    flex: 1, // Ocupar todo el espacio vertical disponible
+    height: '100%',
+    flex: 1,
+  },
+  contentContainer: {
+    marginTop: theme.spacing(8), // Añade un margen superior para mover el contenido hacia abajo
+    textAlign: 'center',
   },
 }));
 
 export default function ProgressPage() {
   const classes = useStyles();
+
   // Datos de ejemplo para los gráficos
   const data = [
     { name: 'Lunes', Tareas: 5, Hábitos: 3 },
@@ -69,35 +74,36 @@ export default function ProgressPage() {
     { name: 'Viernes', Tareas: 3, Hábitos: 2 },
     { name: 'Sabado', Tareas: 5, Hábitos: 5 },
     { name: 'Domingo', Tareas: 4, Hábitos: 6 },
-    // Añade más datos aquí...
   ];
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
 
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          onClick={() => {
-            navigate(-1); // Vuelve a la página anterior
-          }}
-        >
-          <ArrowBackIcon />
-        </IconButton>
-      </Toolbar>
-    </AppBar>
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
 
       <Container maxWidth="xl" style={{ height: '100%' }}>
         <Grid container spacing={3} style={{ height: '100%', display: 'flex' }}>
           <Grid item xs={6}>
             <Paper className={classes.paper} style={{ height: '100%' }}>
-              <Typography variant="h4">Tu Progreso</Typography>
-              <Typography variant="body1">
-                Aquí puedes ver tu progreso en tareas y hábitos
-              </Typography>
+              <div className={classes.contentContainer}>
+                <Typography variant="h2">Tu Progreso</Typography>
+                <Typography variant="body3">
+                  Aquí puedes ver tu progreso en tareas y hábitos
+                </Typography>
+              </div>
               <div className={classes.chartContainer}>
                 <LineChart width={550} height={550} data={data}>
                   <Line type="monotone" dataKey="Tareas" stroke="#8884d8" />
@@ -112,7 +118,6 @@ export default function ProgressPage() {
           <Grid item xs={6}>
             <Paper className={classes.paper} style={{ height: '100%' }}>
               <Typography variant="h4">Mejora tus hábitos</Typography>
-              {/* Mostrar la imagen aquí */}
               <div className={classes.imageContainer}>
                 <img src={backgroundImage} alt="Mejora tus hábitos" className={classes.image} />
               </div>
